@@ -62,7 +62,6 @@ johndoe.save(err =>{
     console.log(err, 'SAVING');
 })
 
-User.remove();
 module.exports = {
     User,
     Report
