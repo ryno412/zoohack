@@ -1,5 +1,5 @@
-const accountSid = provess.env.TW_API;
-const authToken = process.env.TW_KEY;
+const accountSid = process.env.TW_API || 'foo';
+const authToken = process.env.TW_KEY || 'foo';
 
 const twilio = require('twilio');
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
