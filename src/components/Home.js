@@ -1,16 +1,12 @@
 import React from 'react';
-import Header from './Header';
+import CircularProgress from 'material-ui/CircularProgress';
 
 const Home = props => {
   if (props.loading) {
-    return <h1>Loading...</h1>;
+    return <CircularProgress />;
   }
 
-  return (
-    <div>
-      <Header />
-    </div>
-  );
+  return <div>Data</div>;
 };
 
 export default Home;

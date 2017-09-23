@@ -1,8 +1,8 @@
-const INIT_FETCH_DATA = 'main/INIT_FETCH_DATA';
-const FETCH_DATA_SUCCESS = 'main/FETCH_DATA_SUCCESS';
-const FETCH_DATA_FAILURE = 'main/FETCH_DATA_FAILURE';
-const FETCH_DATA = 'main/FETCH_DATA';
-const SET_DATA = 'main/SET_DATA';
+const INIT_FETCH_DATA = 'data/INIT_FETCH_DATA';
+const FETCH_DATA_SUCCESS = 'data/FETCH_DATA_SUCCESS';
+const FETCH_DATA_FAILURE = 'data/FETCH_DATA_FAILURE';
+const FETCH_DATA = 'data/FETCH_DATA';
+const SET_DATA = 'data/SET_DATA';
 
 export default {
   INIT_FETCH_DATA,
