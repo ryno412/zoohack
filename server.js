@@ -19,6 +19,17 @@ app.use(serveStatic(`${__dirname}/dist/client`, { index: ['index.html', 'index.h
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
 
+const report = {
+    birdName: 'macaw',
+    color: 'blue',
+    amountOfBirds: 'one ore more',
+    location: 'flight or grand',
+    tagged: 'yes',
+    marks: 'blue feathers,one eye',
+    nest: true,
+
+
+}
 
 function respond(message) {
     var twiml = new MessagingResponse();
