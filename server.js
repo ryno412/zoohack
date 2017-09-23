@@ -41,11 +41,12 @@ const chat = [
     'Hello! and welcome to the\n' +
     'Jr Rangers Program!\n' +
     'What is your Name?',
-    'Lets a make bird report. Describe the birds colors'
+    'Lets a make bird report. Describe the birds colors',
+    'Where did you find this bird?'
 ]
 
 const chatExistingUser = [
-    'What type of bird did you find?'
+    'Where did you find this bird?'
 ]
 
 const NAME = 'name';
@@ -71,9 +72,15 @@ function respond(req, res, user){
    } else if (chatPrompt === NAME) {
        updateUser(user, NAME, input, REPORT, (err)=>{
            if (err) return sendMessage(res, errTxt);
-           sendMessage(res, chat[1]);
+           sendMessage(res, `Hello ${input}. ${chat[1]}`);
        });
    } else if (chatPrompt === REPORT) {
+       updateUser(user, REPORT, [new Report({color: input})], `${REPORT}-1`, (err)=>{
+           if (err) return sendMessage(res, errTxt);
+           sendMessage(res, `Hello ${input} ${chat[2]}`);
+       });
+   } else {
+       sendMessage(res, `Thanks ${user.name}! You have just helped save an animal from extinction`);
 
    }
 
