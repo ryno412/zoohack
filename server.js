@@ -49,16 +49,11 @@ app.post('/message', (req, res)=>{
     const twiml = new MessagingResponse();
 
     let msg = chat[0];
-    if (input === 'yes') msg[1];
+    if (input === 'yes') msg = chat[1];
 
 
     twiml.message(msg);
-
-
-
-
-
-
+    
 
     res.type('text/xml');
     res.send(twiml.toString());
