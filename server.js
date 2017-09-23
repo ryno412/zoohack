@@ -12,7 +12,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 const db = require(__dirname + '/src/db')
-const Users = db.User;
+const User = db.User;
 const Report = db.Report;
 
 
@@ -113,7 +113,7 @@ app.post('/message', (req, res)=>{
     // res.type('text/xml');
     // res.send(twiml.toString());
 
-    Users.findOne({
+    User.findOne({
         phone: phone,
     }, function(err, user) {
         console.log('DOC!', user);
@@ -132,7 +132,7 @@ app.post('/message', (req, res)=>{
 
 
 app.get('/results', (req, res) =>{
-        Users.find({}).exec(function(err, result) {
+        User.find({}).exec(function(err, result) {
             console.log(err, result);
             res.send(result)
         });
