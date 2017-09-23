@@ -42,6 +42,9 @@ const chat = [
 app.post('/message', (req, res)=>{
     const phone = req.body.From;
     let input = req.body.Body;
+    if (input && typeof input === 'string') {
+        input = input.toLowerCase();
+    }
     console.log("*******")
     console.log(req.body);
     console.log("*******")
