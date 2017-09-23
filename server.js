@@ -32,11 +32,11 @@ app.post('/message', (req, res)=>{
     const phone = req.body.From;
     const input = req.body.Body;
     console.log("*******")
-    console.log(res.body);
+    console.log(req.body);
     console.log("*******")
 
     const twiml = new MessagingResponse();
-    twiml.message(message);
+    twiml.message('LETS SAVE SOME ANIMALS');
     res.type('text/xml');
     res.send(twiml.toString());
 
