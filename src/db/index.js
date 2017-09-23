@@ -20,16 +20,25 @@ mongoose.connect(uristring, function (err, res) {
     }
 });
 
+var reportSchema = new mongoose.Schema({
+    // phone number of participant
+    bird: String,
+    color: String,
+});
+
 var userSchema = new mongoose.Schema({
     name: {
         first: String,
         last: { type: String, trim: true }
     },
-    age: { type: Number, min: 0}
+    phone: String,
+    age: { type: Number, min: 0},
+    reports: [reportSchema]
 });
 
 
 var User = mongoose.model('Users', userSchema);
+var Report = mongoose.model('Report', reportSchema);
 
 // Clear out old data
 User.remove({}, function(err) {
@@ -41,16 +50,25 @@ User.remove({}, function(err) {
 // Creating one user.
 var johndoe = new User ({
     name: { first: 'John', last: 'Doe' },
-    age: 25
+    age: 25,
+    phone:'76088899999',
+    reports: [],
+
 });
+
+johndoe.save(err =>{
+    console.log(err, 'SAVING');
+
+
+})
 
 // Saving it to the database.
-johndoe.save(function (err) {if (err) console.log ('Error on save!')});
 
-// Creating more users manually
-var janedoe = new User ({
-    name: { first: 'Jane', last: 'Doe' },
-    age: 65
-});
 
-module.exports = User;
+
+
+
+module.exports = {
+    User,
+    Report
+}

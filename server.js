@@ -1,5 +1,5 @@
-const accountSid = process.env.TW_API || 'foo';
-const authToken = process.env.TW_KEY || 'foo';
+const accountSid = process.env.TW_API || 'AC05e5e36cdd8805d91483a43ffdba1ca3';
+const authToken = process.env.TW_KEY || 'deaf596b59bdc360252d0782a69b3b94';
 
 const twilio = require('twilio');
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
@@ -11,7 +11,9 @@ const compression = require('compression');
 const app = express();
 const port = process.env.PORT || 5000;
 
-const db = require(__dirname + '/src/db');
+const db = require(__dirname + '/src/db')
+const Users = db.User;
+const Report = db.Report;
 
 
 
@@ -34,8 +36,8 @@ const report = {
 
 }
 
-function respond(message) {
-    var twiml = new MessagingResponse();
+const sendMessage = (message, response) => {
+    const twiml = new MessagingResponse();
     twiml.message(message);
     response.type('text/xml');
     response.send(twiml.toString());
@@ -48,41 +50,72 @@ const chat = [
     'Lets make your first bird report. Describe the birds colors'
 ]
 
+const chatExistingUser = [
+    'Ready to make a bird report?'
+]
+
+
+
+
 app.post('/message', (req, res)=>{
     const phone = req.body.From;
     let input = req.body.Body;
     if (input && typeof input === 'string') {
         input = input.toLowerCase().trim();
     }
-    console.log("*******")
-    console.log(JSON.stringify(req.body));
-    console.log("*******")
+    // console.log("*******")
+    // console.log(JSON.stringify(req.body));
+    // console.log("*******")
+    //
+    // const twiml = new MessagingResponse();
+    // let msg = chat[0];
+    // if (input == 'yes') msg = chat[1];
+    //
+    //
+    // twiml.message(msg);
+    //
+    // res.type('text/xml');
+    // res.send(twiml.toString());
 
-    const twiml = new MessagingResponse();
-    let msg = chat[0];
-    if (input == 'yes') msg = chat[1];
-
-
-    twiml.message(msg);
-
-    res.type('text/xml');
-    res.send(twiml.toString());
+    Users.findOne({
+        phone: phone,
+    }, function(err, doc) {
+        console.log('DOC!', doc);
+        if (doc) {
+            sendMessage(`Hello ${doc.name.first}!`, res)
+        } else {
+            sendMessage(chat[0], res)
+        }
+    });
 });
 
 app.get('/hello', (req, res) =>{
-    client.messages.create({
-    body: 'Hello from Node',
-    to: '+17605225669',  // Text this number
-    from: '+17603003698' // From a valid Twilio number
-}).then(message => {
-        console.log(message);
-        res.send('ok')
+    Users.findOne({
+        phone: '76088899999',
+    }, function(err, doc){
+        console.log('DOC!', doc);
+        if (doc){
+            sendMessage(`Hello ${doc.name.first}!`, res)
+            res.send('hello')
+        } else {
+            sendMessage('Ready to get Started', res)
+            res.send('New')
+        }
+        // doc.reports.push(new Report({
+        //     bird: 'macaw',
+        //     color: 'blue'
+        // }))
+        // doc.save(function(err, r){
+        //     console.log(err, r);
+        // })
     })
+
+
 })
 
 
 app.get('/results', (req, res) =>{
-        db.find({}).exec(function(err, result) {
+        Users.find({}).exec(function(err, result) {
             console.log(err, result);
             res.send(result)
         });
