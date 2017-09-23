@@ -36,7 +36,7 @@ const chat = [
     'Jr Rangers Program!\n' +
     'Are you ready to get started?',
 
-    'Lets make your first bird report'
+    'Lets make your first bird report. Describe the birds colors'
 
 ]
 app.post('/message', (req, res)=>{
@@ -78,7 +78,7 @@ app.get('*', (req, res) => {
 });
 
 app.listen(port, ()=>{
-    console.log('oh yea!')
+    console.log(`Server started on port${port}`);
 })
 
 
