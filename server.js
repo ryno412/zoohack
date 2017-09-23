@@ -32,19 +32,34 @@ function respond(message) {
 }
 
 const chat = [
-    'Hello! and welcome to the Jr Rangers Program!\n' +
-    'Are you ready to get started?'
+    'Hello! and welcome to the\n' +
+    'Jr Rangers Program!\n' +
+    'Are you ready to get started?',
+
+    'Lets make your first bird report'
 
 ]
 app.post('/message', (req, res)=>{
     const phone = req.body.From;
-    const input = req.body.Body;
+    let input = req.body.Body;
     console.log("*******")
     console.log(req.body);
     console.log("*******")
 
     const twiml = new MessagingResponse();
-    twiml.message(chat[0]);
+
+    let msg = chat[0];
+    if (input === 'yes') msg[1];
+
+
+    twiml.message(msg);
+
+
+
+
+
+
+
     res.type('text/xml');
     res.send(twiml.toString());
 });
