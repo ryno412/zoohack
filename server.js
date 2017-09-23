@@ -53,6 +53,7 @@ const NAME = 'name';
 const REPORT = 'report';
 
 function updateUser (user, key, value, prompt, cb){
+    console.log(user, 'USER IN UPDATE');
     user.chatPrompt = prompt;
     if (key && value){
         user[key] = value;
@@ -127,7 +128,7 @@ app.post('/message', (req, res)=>{
                 console.log(err,'ERROR');
                 console.log(userRecord, 'RECORD');
                 if (err) sendMessage(res, errTxt);
-                return respond(req, res, userRecord);
+                return sendMessage(res, 'COOL');
             })
         } else {
             return respond(req, res, user);
