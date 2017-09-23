@@ -127,7 +127,7 @@ app.post('/message', (req, res)=>{
             u.save((err, userRecord) =>{
                 console.log(err,'ERROR');
                 console.log(userRecord, 'RECORD');
-                if (err) sendMessage(res, errTxt);
+                if (err) return sendMessage(res, errTxt);
                 return sendMessage(res, 'COOL');
             })
         } else {
