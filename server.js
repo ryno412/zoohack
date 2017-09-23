@@ -34,9 +34,15 @@ app.post('/message', (req, res)=>{
     console.log("*******")
     console.log(req.body);
     console.log("*******")
+    const m = `
+     _V_
+     @.@
+    (\_/)
+     m m`
+
 
     const twiml = new MessagingResponse();
-    twiml.message('LETS SAVE SOME ANIMALS');
+    twiml.message(m);
     res.type('text/xml');
     res.send(twiml.toString());
 
