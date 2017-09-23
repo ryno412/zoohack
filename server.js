@@ -38,10 +38,8 @@ app.get('/', (req, res)=>{
 
 
 const chat = [
-    'Hello! and welcome to the Jr Rangers Program!' +
+    'Hello! and welcome to the Jr Rangers Program!\n' +
     'Are you ready to get started?'
-
-
 
 ]
 app.post('/message', (req, res)=>{
