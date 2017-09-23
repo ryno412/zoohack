@@ -10,15 +10,18 @@ const MessagingResponse = require('twilio').twiml.MessagingResponse;
 const client = new twilio(accountSid, authToken);
 const express = require('express');
 const bodyParser = require('body-parser');
+const serveStatic = require('serve-static');
+const compression = require('compression');
 const app = express();
 const port = process.env.PORT || 5000;
 
+
+app.use(compression());
+app.use(serveStatic(`${__dirname}/dist/client`, { index: ['index.html', 'index.htm'] }));
+
+
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
-
-const fs = require('fs');
-const macaw = fs.readFileSync(__dirname + '/macaw.txt', {encoding: 'utf8'})
-console.log(macaw);
 
 
 function respond(message) {
@@ -32,34 +35,27 @@ app.get('/', (req, res)=>{
     res.send('Welcome to the zoo zoo chat');
 })
 
+
+
+const chat = [
+    'Hello! and welcome to the Jr Rangers Program!' +
+    'Are you ready to get started?'
+
+
+
+]
 app.post('/message', (req, res)=>{
     const phone = req.body.From;
     const input = req.body.Body;
     console.log("*******")
     console.log(req.body);
     console.log("*******")
-    const m = `
-     _V_
-     @.@
-    (\_/)
-     m m
-     
-     `
-
 
     const twiml = new MessagingResponse();
-    twiml.message(macaw);
+    twiml.message(chat[0]);
     res.type('text/xml');
     res.send(twiml.toString());
-
-    // res.send({
-    //     status: 200,
-    //     phone,
-    //     msg: input
-    // })
 });
-
-
 
 app.get('/hello', (req, res) =>{
     client.messages.create({
@@ -71,6 +67,10 @@ app.get('/hello', (req, res) =>{
         res.send('ok')
     })
 })
+
+app.get('*', (req, res) => {
+    res.sendfile(`${__dirname}/dist/client/index.html`);
+});
 
 app.listen(port, ()=>{
     console.log('oh yea!')
