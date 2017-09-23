@@ -1,7 +1,7 @@
 import React from 'react';
-//import './app.scss';
+import '../styles/app.scss';
 
 const App = (props) => (
-<h1>ZooTime</h1>
+<h1 className="heading">ZooTime!</h1>
 )
 export default App

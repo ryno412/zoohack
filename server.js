@@ -1,9 +1,5 @@
-/**
- * Created by rford on 9/23/17.
- */
-console.log('YOLO');
-const accountSid = 'AC05e5e36cdd8805d91483a43ffdba1ca3'; // Your Account SID from www.twilio.com/console
-const authToken = 'deaf596b59bdc360252d0782a69b3b94';   // Your Auth Token from www.twilio.com/console
+const accountSid = 'AC05e5e36cdd8805d91483a43ffdba1ca3';
+const authToken = 'foo';
 
 const twilio = require('twilio');
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
@@ -35,10 +31,9 @@ const chat = [
     'Hello! and welcome to the\n' +
     'Jr Rangers Program!\n' +
     'Are you ready to get started?',
-
     'Lets make your first bird report. Describe the birds colors'
-
 ]
+
 app.post('/message', (req, res)=>{
     const phone = req.body.From;
     let input = req.body.Body;
@@ -49,17 +44,12 @@ app.post('/message', (req, res)=>{
     console.log(req.body);
     console.log("*******")
 
-    console.log('iií');
-    console.log(input);
-
     const twiml = new MessagingResponse();
-
     let msg = chat[0];
     if (input == 'yes') msg = chat[1];
 
 
     twiml.message(msg);
-
 
     res.type('text/xml');
     res.send(twiml.toString());
@@ -74,6 +64,10 @@ app.get('/hello', (req, res) =>{
         console.log(message);
         res.send('ok')
     })
+})
+
+app.get('/health', (req, res)=>{
+    res.send('ok');
 })
 
 app.get('*', (req, res) => {
