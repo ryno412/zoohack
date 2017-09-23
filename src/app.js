@@ -3,18 +3,16 @@
  */
 import React from 'react';
 import ReactDOM from 'react-dom';
-//import { Provider } from 'react-redux';
-require("babel-core/register");
-require("babel-polyfill");
+import { Provider } from 'react-redux';
+import initStore from './state/store';
+import { withRouter } from 'react-router-dom';
+require('babel-core/register');
+require('babel-polyfill');
+import Main from './components/Main';
 
-//import store from './store';
+const store = initStore();
 
-import App from './components/App';
-
-// ReactDOM.render(
-//     <Provider store={store}>
-//         <App></App>
-//     </Provider>,
-//     document.getElementById('app')
-// );
-ReactDOM.render(<App></App>,document.getElementById('app'));
+ReactDOM.render(
+  <Provider store={store}>{withRouter(Main)}</Provider>,
+  document.getElementById('app')
+);
