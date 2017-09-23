@@ -81,7 +81,7 @@ function respond(req, res, user){
    } else if (chatPrompt === REPORT) {
        updateUser(user, REPORT, [new Report({color: input})], `${REPORT}-1`, (err)=>{
            if (err) return sendMessage(res, errTxt);
-           sendMessage(res, `Hello ${input} ${chat[2]}`);
+           sendMessage(res, `${chat[2]}`);
        });
    } else {
        sendMessage(res, `Thanks ${user.name}! You have just helped save an animal from extinction`);
