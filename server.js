@@ -112,28 +112,17 @@ app.post('/message', (req, res)=>{
     console.log("*******")
     console.log(JSON.stringify(req.body));
     console.log("*******")
-    //
-    // const twiml = new MessagingResponse();
-    // let msg = chat[0];
-    // if (input == 'yes') msg = chat[1];
-    //
-    //
-    // twiml.message(msg);
-    //
-    // res.type('text/xml');
-    // res.send(twiml.toString());
 
+    
     User.findOne({
-        phone: phone,
+        phone: `+1${phone}`,
     }, function(err, user) {
         console.log('USER', user);
         if (err){
             return res.send('not ok :(')
         }
         if (!user){
-            const u = new User ({
-                phone: phone,
-            });
+           new User ({phone: phone,});
             return respond(req, res, u);
         }
         return respond(req, res, user);
