@@ -58,8 +58,22 @@ var johndoe = new User ({
 
 });
 
+function up (user, x){
+    user.age = 11
+    user.save(err =>{
+        console.log(err);
+    })
+}
 johndoe.save(err =>{
-    console.log(err, 'SAVING');
+    console.log(err, 'SAVING')
+    User.findOne({
+        phone: `76088899999`,
+    }, function(err, user) {
+        console.log('USER', user);
+        up(user)
+
+
+    });
 })
 
 module.exports = {
