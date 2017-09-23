@@ -120,7 +120,13 @@ app.post('/message', (req, res)=>{
         if (err){
             return res.send('not ok :(')
         }
-        respond(req, res, user);
+        if (!user){
+            const u = new User ({
+                phone: phone,
+            });
+            return respond(req, res, u);
+        }
+        return respond(req, res, user);
     });
 });
 
