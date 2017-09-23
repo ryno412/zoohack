@@ -1,6 +1,8 @@
 import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
-import NavBar from './Components/NavBar';
+import NavBar from './NavBar';
+import SplashContainer from '../containers/SplashContainer';
+import HomeContainer from '../containers/HomeContainer';
 
 const Main = props => (
   <div>

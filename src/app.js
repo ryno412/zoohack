@@ -6,13 +6,18 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import initStore from './state/store';
 import { withRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 require('babel-core/register');
 require('babel-polyfill');
-import Main from './components/Main';
+import MainContainer from './containers/MainContainer';
 
 const store = initStore();
 
 ReactDOM.render(
-  <Provider store={store}>{withRouter(Main)}</Provider>,
+  <BrowserRouter>
+    <Provider store={store}>
+      <MainContainer />
+    </Provider>
+  </BrowserRouter>,
   document.getElementById('app')
 );
