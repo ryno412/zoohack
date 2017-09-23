@@ -1,0 +1,21 @@
+{
+  "ToCountry": "US",
+  "ToState": "CA",
+  "SmsMessageSid": "SMcd8f03bd66dcec9a910a97b0f7be8ff6",
+  "NumMedia": "0",
+  "ToCity": "ESCONDIDO",
+  "FromZip": "92083",
+  "SmsSid": "SMcd8f03bd66dcec9a910a97b0f7be8ff6",
+  "FromState": "CA",
+  "SmsStatus": "received",
+  "FromCity": "ESCONDIDO",
+  "Body": "Yo",
+  "FromCountry": "US",
+  "To": "+17603003698",
+  "ToZip": "92029",
+  "NumSegments": "1",
+  "MessageSid": "SMcd8f03bd66dcec9a910a97b0f7be8ff6",
+  "AccountSid": "AC05e5e36cdd8805d91483a43ffdba1ca3",
+  "From": "+17605225669",
+  "ApiVersion": "2010-04-01"
+}
