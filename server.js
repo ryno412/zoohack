@@ -31,12 +31,6 @@ function respond(message) {
     response.send(twiml.toString());
 }
 
-app.get('/', (req, res)=>{
-    res.send('Welcome to the zoo zoo chat');
-})
-
-
-
 const chat = [
     'Hello! and welcome to the Jr Rangers Program!\n' +
     'Are you ready to get started?'
