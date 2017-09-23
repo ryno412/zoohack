@@ -28,7 +28,7 @@ var reportSchema = new mongoose.Schema({
 
 var userSchema = new mongoose.Schema({
     name: String,
-    phone: String,
+    phone: {unique: true, type: String},
     age: { type: Number, min: 0},
     chatPrompt: String,
     reports: [reportSchema]
@@ -62,7 +62,7 @@ johndoe.save(err =>{
     console.log(err, 'SAVING');
 })
 
-
+User.remove();
 module.exports = {
     User,
     Report

@@ -58,7 +58,7 @@ function updateUser (user, key, value, prompt, cb){
         user[key] = value;
     }
     user.save((err, data) =>{
-        console.log('ERR SAVING USER');
+        console.log('ERR SAVING USER', err, data);
         return cb(err, data)
     });
 }
