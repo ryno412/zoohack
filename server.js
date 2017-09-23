@@ -1,5 +1,5 @@
 const accountSid = 'AC05e5e36cdd8805d91483a43ffdba1ca3';
-const authToken = 'foo';
+const authToken = 'deaf596b59bdc360252d0782a69b3b94';
 
 const twilio = require('twilio');
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
@@ -41,7 +41,7 @@ app.post('/message', (req, res)=>{
         input = input.toLowerCase().trim();
     }
     console.log("*******")
-    console.log(req.body);
+    console.log(JSON.stringify(req.body));
     console.log("*******")
 
     const twiml = new MessagingResponse();
