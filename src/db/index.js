@@ -27,14 +27,16 @@ var reportSchema = new mongoose.Schema({
 });
 
 var userSchema = new mongoose.Schema({
-    name: {
-        first: String,
-        last: { type: String, trim: true }
-    },
+    name: String,
     phone: String,
     age: { type: Number, min: 0},
+    chatPrompt: String,
     reports: [reportSchema]
 });
+
+// userSchema.updateLastChat = (lastQues, cb)=>{
+//
+// }
 
 
 var User = mongoose.model('Users', userSchema);
@@ -49,7 +51,7 @@ User.remove({}, function(err) {
 
 // Creating one user.
 var johndoe = new User ({
-    name: { first: 'John', last: 'Doe' },
+    name: 'John',
     age: 25,
     phone:'76088899999',
     reports: [],
@@ -58,14 +60,7 @@ var johndoe = new User ({
 
 johndoe.save(err =>{
     console.log(err, 'SAVING');
-
-
 })
-
-// Saving it to the database.
-
-
-
 
 
 module.exports = {

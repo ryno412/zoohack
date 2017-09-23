@@ -36,23 +36,59 @@ const report = {
 
 }
 
-const sendMessage = (message, response) => {
+const errTxt = 'I am a little slow today. please send msg again';
+const chat = [
+    'Hello! and welcome to the\n' +
+    'Jr Rangers Program!\n' +
+    'What is your Name?',
+    'Lets a make bird report. Describe the birds colors'
+]
+
+const chatExistingUser = [
+    'What type of bird did you find?'
+]
+
+const NAME = 'name';
+const REPORT = 'report';
+
+function updateUser (user, key, value, prompt, cb){
+    user.chatPrompt = prompt;
+    if (key && value){
+        user[key] = value;
+    }
+    user.save(cb);
+}
+
+function respond(req, res, user){
+   const chatPrompt = user.chatPrompt;
+   const input = req.body.Body;
+
+   if (!chatPrompt){
+       updateUser(user, null, null, NAME, (err)=>{
+           if (err) return sendMessage(res, errTxt);
+           sendMessage(res, chat[0]);
+       });
+   } else if (chatPrompt === NAME) {
+       updateUser(user, NAME, input, REPORT, (err)=>{
+           if (err) return sendMessage(res, errTxt);
+           sendMessage(res, chat[1]);
+       });
+   } else if (chatPrompt === REPORT) {
+
+   }
+
+}
+
+
+
+const sendMessage = (response, message) => {
     const twiml = new MessagingResponse();
     twiml.message(message);
     response.type('text/xml');
     response.send(twiml.toString());
 }
 
-const chat = [
-    'Hello! and welcome to the\n' +
-    'Jr Rangers Program!\n' +
-    'Are you ready to get started?',
-    'Lets make your first bird report. Describe the birds colors'
-]
 
-const chatExistingUser = [
-    'Ready to make a bird report?'
-]
 
 
 
@@ -79,39 +115,14 @@ app.post('/message', (req, res)=>{
 
     Users.findOne({
         phone: phone,
-    }, function(err, doc) {
-        console.log('DOC!', doc);
-        if (doc) {
-            sendMessage(`Hello ${doc.name.first}!`, res)
-        } else {
-            sendMessage(chat[0], res)
+    }, function(err, user) {
+        console.log('DOC!', user);
+        if (err){
+            return res.send('not ok :(')
         }
+        respond(req, res, user);
     });
 });
-
-app.get('/hello', (req, res) =>{
-    Users.findOne({
-        phone: '76088899999',
-    }, function(err, doc){
-        console.log('DOC!', doc);
-        if (doc){
-            sendMessage(`Hello ${doc.name.first}!`, res)
-            res.send('hello')
-        } else {
-            sendMessage('Ready to get Started', res)
-            res.send('New')
-        }
-        // doc.reports.push(new Report({
-        //     bird: 'macaw',
-        //     color: 'blue'
-        // }))
-        // doc.save(function(err, r){
-        //     console.log(err, r);
-        // })
-    })
-
-
-})
 
 
 app.get('/results', (req, res) =>{
