@@ -1,5 +1,5 @@
 const accountSid = 'AC05e5e36cdd8805d91483a43ffdba1ca3';
-const authToken = 'deaf596b59bdc360252d0782a69b3b94';
+const authToken = process.env.TW_KEY;
 
 const twilio = require('twilio');
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
@@ -75,7 +75,7 @@ app.get('*', (req, res) => {
 });
 
 app.listen(port, ()=>{
-    console.log(`Server started on port${port}`);
+    console.log(`Server started on port${port} - oh ya!`);
 })
 
 
