@@ -116,14 +116,14 @@ app.post('/message', (req, res)=>{
 
 
     User.findOne({
-        phone: `+1${phone}`,
+        phone: phone,
     }, function(err, user) {
         console.log('USER', user);
         if (err){
             return res.send('not ok :(')
         }
         if (!user){
-            let u = new User ({phone: `+1${phone}`});
+            let u = new User ({phone: phone});
             u.save((err, userRecord) =>{
                 console.log(err,'ERROR');
                 console.log(userRecord, 'RECORD');
