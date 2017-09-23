@@ -113,7 +113,7 @@ app.post('/message', (req, res)=>{
     console.log(JSON.stringify(req.body));
     console.log("*******")
 
-    
+
     User.findOne({
         phone: `+1${phone}`,
     }, function(err, user) {
@@ -122,8 +122,7 @@ app.post('/message', (req, res)=>{
             return res.send('not ok :(')
         }
         if (!user){
-           new User ({phone: phone,});
-            return respond(req, res, u);
+            return respond(req, res, new User ({phone: phone}));
         }
         return respond(req, res, user);
     });
