@@ -8,7 +8,6 @@
     "start": "webpack-dev-server  --hot --inline --config ./webpack/webpack.dev.config.js",
     "start:server": "node server.js",
     "build": "webpack --progress --config ./webpack/webpack.prod.config.js"
-
   },
   "author": "",
   "license": "ISC",
@@ -50,16 +49,15 @@
     "webpack-dev-server": "^2.4.5",
     "webpack-merge": "4.1.0"
   },
-
   "dependencies": {
-    "body-parser": "^1.18.2",
-    "twilio": "^3.6.7",
     "babel-polyfill": "^6.26.0",
+    "body-parser": "^1.18.2",
     "compression": "^1.7.0",
     "cookie-parser": "~1.4.3",
     "express": "^4.15.4",
     "immutable": "^3.8.1",
     "moment": "^2.18.1",
+    "mongoose": "^4.11.12",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-redux": "^5.0.6",
@@ -69,6 +67,7 @@
     "redux-saga": "^0.15.6",
     "request": "^2.81.0",
     "serve-favicon": "~2.4.2",
-    "serve-static": "^1.12.4"
+    "serve-static": "^1.12.4",
+    "twilio": "^3.6.7"
   }
 }

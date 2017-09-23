@@ -3,13 +3,16 @@ const authToken = process.env.TW_KEY || 'foo';
 
 const twilio = require('twilio');
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
-const client = new twilio(accountSid, authToken);
+//const client = new twilio(accountSid, authToken);
 const express = require('express');
 const bodyParser = require('body-parser');
 const serveStatic = require('serve-static');
 const compression = require('compression');
 const app = express();
 const port = process.env.PORT || 5000;
+
+const db = require(__dirname + '/src/db');
+
 
 
 app.use(compression());
@@ -77,6 +80,13 @@ app.get('/hello', (req, res) =>{
     })
 })
 
+
+app.get('/results', (req, res) =>{
+        db.find({}).exec(function(err, result) {
+            console.log(err, result);
+            res.send(result)
+        });
+});
 app.get('/health', (req, res)=>{
     res.send('ok');
 })
