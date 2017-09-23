@@ -58,6 +58,7 @@
     "express": "^4.15.4",
     "immutable": "^3.8.1",
     "moment": "^2.18.1",
+    "mongoose": "^4.11.12",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-redux": "^5.0.6",

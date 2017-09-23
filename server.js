@@ -1,9 +1,8 @@
-const accountSid = "ACfbec6cae01cb4afb173e268bd5501f5f";
-const authToken = "932725c460539deadb0154bdb594bf68";
-
+const accountSid = process.env.TW_API || 'foo';
+const authToken = process.env.TW_KEY || 'foo';
 const twilio = require('twilio');
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
-const client = new twilio(accountSid, authToken);
+//const client = new twilio(accountSid, authToken);
 const express = require('express');
 const bodyParser = require('body-parser');
 const serveStatic = require('serve-static');
@@ -17,6 +16,9 @@ var ExifImage = require('exif').ExifImage;
 const app = express();
 const port = process.env.PORT || 5000;
 
+const db = require(__dirname + '/src/db');
+
+
 
 app.use(compression());
 app.use(serveStatic(`${__dirname}/dist/client`, { index: ['index.html', 'index.htm'] }));
@@ -26,6 +28,18 @@ app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
 
 var images = []
+
+const report = {
+    birdName: 'macaw',
+    color: 'blue',
+    amountOfBirds: 'one ore more',
+    location: 'flight or grand',
+    tagged: 'yes',
+    marks: 'blue feathers,one eye',
+    nest: true,
+
+
+}
 
 function respond(message) {
     var twiml = new MessagingResponse();
@@ -121,6 +135,13 @@ app.get('/hello', (req, res) =>{
     })
 })
 
+
+app.get('/results', (req, res) =>{
+        db.find({}).exec(function(err, result) {
+            console.log(err, result);
+            res.send(result)
+        });
+});
 app.get('/health', (req, res)=>{
     res.send('ok');
 })
