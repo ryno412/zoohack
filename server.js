@@ -43,7 +43,7 @@ app.post('/message', (req, res)=>{
     const phone = req.body.From;
     let input = req.body.Body;
     if (input && typeof input === 'string') {
-        input = input.toLowerCase();
+        input = input.toLowerCase().trim();
     }
     console.log("*******")
     console.log(req.body);
