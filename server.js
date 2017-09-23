@@ -129,8 +129,9 @@ app.post('/message', (req, res)=>{
                 if (err) sendMessage(res, errTxt);
                 return respond(req, res, userRecord);
             })
+        } else {
+            return respond(req, res, user);
         }
-        return respond(req, res, user);
     });
 });
 
