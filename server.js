@@ -16,6 +16,10 @@ const port = process.env.PORT || 5000;
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
 
+const fs = require('fs');
+const macaw = fs.readFileSync(__dirname + '/macaw.txt', {encoding: 'utf8'})
+console.log(macaw);
+
 
 function respond(message) {
     var twiml = new MessagingResponse();
@@ -38,11 +42,13 @@ app.post('/message', (req, res)=>{
      _V_
      @.@
     (\_/)
-     m m`
+     m m
+     
+     `
 
 
     const twiml = new MessagingResponse();
-    twiml.message(m);
+    twiml.message(macaw);
     res.type('text/xml');
     res.send(twiml.toString());
 
