@@ -46,10 +46,13 @@ app.post('/message', (req, res)=>{
     console.log(req.body);
     console.log("*******")
 
+    console.log('iií');
+    console.log(input);
+
     const twiml = new MessagingResponse();
 
     let msg = chat[0];
-    if (input === 'yes') msg = chat[1];
+    if (input == 'yes') msg = chat[1];
 
 
     twiml.message(msg);
