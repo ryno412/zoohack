@@ -57,7 +57,10 @@ function updateUser (user, key, value, prompt, cb){
     if (key && value){
         user[key] = value;
     }
-    user.save(cb);
+    user.save((err, data) =>{
+        console.log('ERR SAVING USER');
+        return cb(err, data)
+    });
 }
 
 function respond(req, res, user){
@@ -106,9 +109,9 @@ app.post('/message', (req, res)=>{
     if (input && typeof input === 'string') {
         input = input.toLowerCase().trim();
     }
-    // console.log("*******")
-    // console.log(JSON.stringify(req.body));
-    // console.log("*******")
+    console.log("*******")
+    console.log(JSON.stringify(req.body));
+    console.log("*******")
     //
     // const twiml = new MessagingResponse();
     // let msg = chat[0];
@@ -123,7 +126,7 @@ app.post('/message', (req, res)=>{
     User.findOne({
         phone: phone,
     }, function(err, user) {
-        console.log('DOC!', user);
+        console.log('USER', user);
         if (err){
             return res.send('not ok :(')
         }
