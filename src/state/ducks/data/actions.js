@@ -4,19 +4,19 @@ const apiUrl =
 
 export const initFetchData = () => {
   return {
-    type: types.INIT_FETCH_MESSAGES
+    type: types.INIT_FETCH_DATA
   };
 };
 
 export const fetchDataSuccess = () => {
   return {
-    type: types.FETCH_MESSAGES_SUCCESS
+    type: types.FETCH_DATA_SUCCESS
   };
 };
 
 export const fetchDataFailure = error => {
   return {
-    type: types.FETCH_MESSAGES_FAILURE,
+    type: types.FETCH_DATA_FAILURE,
     error: error
   };
 };
@@ -28,14 +28,14 @@ export const fetchData = id => {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' }
     };
-    return fetch(`${apiUrl}data`, params)
+    return fetch(`${apiUrl}mock-data`, params)
       .then(
         response => response.json(),
         error => console.log('An error occured.', error)
       )
       .then(res => {
-        if (res.messages) {
-          dispatch(setData(res.messages));
+        if (res.report) {
+          dispatch(setData(res.report));
           dispatch(fetchDataSuccess());
         } else {
           dispatch(fetchDataFailure(res.error));
