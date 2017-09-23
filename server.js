@@ -1,4 +1,4 @@
-const accountSid = 'AC05e5e36cdd8805d91483a43ffdba1ca3';
+const accountSid = provess.env.TW_API;
 const authToken = process.env.TW_KEY;
 
 const twilio = require('twilio');
