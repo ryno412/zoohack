@@ -57,8 +57,10 @@ function detectLabels(fileName) {
             const labels = results[0].labelAnnotations;
             console.log('Labels:');
             labels.forEach((label) => console.log(label.description + ':\t' + label.score));
+            return results;
         })
         .catch((err) => {
+            throw new Error('no image')
             console.error('ERROR:', err);
         });
 }
