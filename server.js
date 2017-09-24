@@ -42,7 +42,8 @@ const chat = [
     'Jr Rangers Program!\n' +
     'What is your Name?',
     'Lets a make bird report. Describe the birds colors',
-    'Where did you find this bird?'
+    'Where did you find this bird?',
+    'Did you see any tags or bands on the birds feet?'
 ]
 
 const chatExistingUser = [
@@ -58,12 +59,24 @@ function updateUser (user, key, value, prompt, cb){
         user.reportInProgress = true;
     }
     if (prompt === 'report-0') {
-        console.log('ADDING REPORT');
         user.reports.push(value);
+    }
+    if (prompt === 'report-1') {
+        const r = user.reports[user.reports.length - 1];
+        r.color = value;
+    }
+    if (prompt === 'report-2') {
+        const r = user.reports[user.reports.length - 1];
+        r.location = value;
+    }
+    if (prompt === 'report-3') {
+        const r = user.reports[user.reports.length - 1];
+        r.tag = value;
     }
     if (key && value){
         user[key] = value;
     }
+
     user.save((err, data) =>{
         return cb(err, data)
     });
@@ -88,7 +101,25 @@ function respond(req, res, user){
            if (err) return sendMessage(res, errTxt);
            sendMessage(res, `${chat[2]}`);
        });
-   } else {
+   } else if (chatPrompt === `${REPORT}-0`) {
+       updateUser(user, REPORT, input, `${REPORT}-1`, (err)=>{
+           if (err) return sendMessage(res, errTxt);
+           sendMessage(res, `${chat[3]}`);
+       });
+   }
+   else if (chatPrompt === `${REPORT}-1`) {
+       updateUser(user, REPORT, input, `${REPORT}-2`, (err)=>{
+           if (err) return sendMessage(res, errTxt);
+           sendMessage(res, `${chat[4]}`);
+       });
+   }
+   else if (chatPrompt === `${REPORT}-3`) {
+       updateUser(user, REPORT, input, `REPORT`, (err)=>{
+           if (err) return sendMessage(res, errTxt);
+           sendMessage(res, `${chat[1]}`);
+       });
+   }
+   else {
        sendMessage(res, `Thanks ${user.name}! You have just helped save an animal from extinction`);
 
    }

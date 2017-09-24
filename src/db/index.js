@@ -24,6 +24,8 @@ var reportSchema = new mongoose.Schema({
     // phone number of participant
     bird: String,
     color: String,
+    location:String,
+    tag: String,
 });
 
 var userSchema = new mongoose.Schema({
