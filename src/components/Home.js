@@ -2,12 +2,17 @@ import React from 'react';
 import CircularProgress from 'material-ui/CircularProgress';
 
 const Home = props => {
-  console.log('Home props: ', props);
   if (props.loading) {
     return <CircularProgress />;
   }
-
-  return <div>Data</div>;
+  let mapped = props.data.map(item => (
+    <div>
+      <div>Name: {item.name}</div>
+      <div>Phone: {item.phone}</div>
+      <div>Age: {item.age}</div>
+    </div>
+  ));
+  return <div>{mapped}</div>;
 };
 
 export default Home;

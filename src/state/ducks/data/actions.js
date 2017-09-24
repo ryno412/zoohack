@@ -34,11 +34,11 @@ export const fetchData = id => {
         error => console.log('An error occured.', error)
       )
       .then(res => {
-        if (res.results) {
-          dispatch(setData(res.results));
+        if (res.length != 0) {
+          dispatch(setData(res));
           dispatch(fetchDataSuccess());
         } else {
-          dispatch(fetchDataFailure(res.error));
+          dispatch(fetchDataFailure(res));
         }
       });
   };
