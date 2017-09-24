@@ -46,6 +46,13 @@ const chat = [
     'Did you see any tags or bands on the birds feet?'
 ]
 
+const birdReportQuestions = [
+    'Lets a make bird report. Describe the birds colors',
+    'Where did you find this bird?',
+    'Did you see any tags or bands on the birds feet?'
+
+]
+
 const chatExistingUser = [
     'Where did you find this bird?'
 ]
@@ -82,48 +89,48 @@ function updateUser (user, key, value, prompt, cb){
     });
 }
 
+
+function saveAndSend(res, user, msg) {
+    user.save((err, data) =>{
+        if (err) return sendMessage(res, errTxt);
+        sendMessage(res, msg);
+    });
+}
 function respond(req, res, user){
    const chatPrompt = user.chatPrompt;
    const input = req.body.Body;
 
    if (!chatPrompt){
-       updateUser(user, null, null, NAME, (err)=>{
-           if (err) return sendMessage(res, errTxt);
-           sendMessage(res, chat[0]);
-       });
+       user.chatPrompt = NAME;
+        saveAndSend(res, user, chat[0]);
    } else if (chatPrompt === NAME) {
-       updateUser(user, NAME, input, REPORT, (err)=>{
-           if (err) return sendMessage(res, errTxt);
-           sendMessage(res, `Hello ${input}. ${chat[1]}`);
-       });
+       user.name = input;
+       user.chatPrompt = REPORT;
+       saveAndSend(res, user, `Hello ${input}. ${birdReportQuestions[0]}`);
+
    } else if (chatPrompt === REPORT) {
-       updateUser(user, REPORT, new Report({color: input}), `${REPORT}-0`, (err)=>{
-           if (err) return sendMessage(res, errTxt);
-           sendMessage(res, `${chat[2]}`);
-       });
-   } else if (chatPrompt === `${REPORT}-0`) {
-       updateUser(user, REPORT, input, `${REPORT}-1`, (err)=>{
-           if (err) return sendMessage(res, errTxt);
-           sendMessage(res, `${chat[3]}`);
-       });
+       user.reports.push(new Report({color: input}));
+       user.chatPrompt = `${REPORT}-0`;
+       saveAndSend(res, user, `${birdReportQuestions[1]}`);
+
+   } else if (chatPrompt === `${REPORT}-0`) {//location
+       user.chatPrompt = `${REPORT}-1`;
+       user.reports[user.reports.length -1].location = input;
+       saveAndSend(res, user, birdReportQuestions[2])
    }
    else if (chatPrompt === `${REPORT}-1`) {
-       updateUser(user, REPORT, input, `${REPORT}-2`, (err)=>{
-           if (err) return sendMessage(res, errTxt);
-           sendMessage(res, `${chat[4]}`);
-       });
-   }
-   else if (chatPrompt === `${REPORT}-3`) {
-       updateUser(user, REPORT, input, `REPORT`, (err)=>{
-           if (err) return sendMessage(res, errTxt);
-           sendMessage(res, `${chat[1]}`);
-       });
+       user.chatPrompt = 'START';
+       user.reports[user.reports.length -1].tag = input;
+       saveAndSend(res, user, `Thanks ${user.name}! You have just helped save an animal from extinction`)
    }
    else {
        sendMessage(res, `Thanks ${user.name}! You have just helped save an animal from extinction`);
 
    }
-
+   console.log('SAVING');
+    user.save((err, data) =>{
+        return cb(err, data)
+    });
 }
 
 
