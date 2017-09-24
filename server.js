@@ -40,10 +40,7 @@ const errTxt = 'I am a little slow today. please send msg again';
 const chat = [
     'Hello! and welcome to the\n' +
     'Jr Rangers Program!\n' +
-    'What is your Name?',
-    'Lets a make bird report. Describe the birds colors',
-    'Where did you find this bird?',
-    'Did you see any tags or bands on the birds feet?'
+    'What is your Name?'
 ]
 
 const birdReportQuestions = [
@@ -53,13 +50,8 @@ const birdReportQuestions = [
 
 ]
 
-const chatExistingUser = [
-    'Where did you find this bird?'
-]
-
 const NAME = 'name';
 const REPORT = 'report';
-
 
 function saveAndSend(res, user, msg) {
     user.save((err, data) =>{
@@ -70,7 +62,6 @@ function saveAndSend(res, user, msg) {
 function respond(req, res, user){
    const chatPrompt = user.chatPrompt;
    const input = req.body.Body;
-
    if (!chatPrompt){
        user.chatPrompt = NAME;
         saveAndSend(res, user, chat[0]);
@@ -79,17 +70,17 @@ function respond(req, res, user){
        user.chatPrompt = REPORT;
        saveAndSend(res, user, `Hello ${input}. ${birdReportQuestions[0]}`);
 
-   } else if (chatPrompt === REPORT) {
+   } else if (chatPrompt === REPORT) {// color
        user.reports.push(new Report({color: input}));
        user.chatPrompt = `${REPORT}-0`;
        saveAndSend(res, user, `${birdReportQuestions[1]}`);
 
-   } else if (chatPrompt === `${REPORT}-0`) {//location
+   } else if (chatPrompt === `${REPORT}-0`) {// location
        user.chatPrompt = `${REPORT}-1`;
        user.reports[user.reports.length -1].location = input;
        saveAndSend(res, user, birdReportQuestions[2])
    }
-   else if (chatPrompt === `${REPORT}-1`) {
+   else if (chatPrompt === `${REPORT}-1`) {// tag
        user.chatPrompt = 'START';
        user.reports[user.reports.length -1].tag = input;
        saveAndSend(res, user, `Thanks ${user.name}! You have just helped save an animal from extinction`)
@@ -120,7 +111,6 @@ app.post('/message', (req, res)=>{
     console.log(JSON.stringify(req.body));
     console.log("*******")
 
-
     User.findOne({
         phone: phone,
     }, function(err, user) {
@@ -128,10 +118,8 @@ app.post('/message', (req, res)=>{
             return res.send('not ok :(')
         }
         if (!user){
-            let u = new User ({phone: phone});
+            let u = new User ({phone: phone, ...req.body});
             u.save((err, userRecord) =>{
-                console.log(err,'ERROR');
-                console.log(userRecord, 'RECORD');
                 if (err) return sendMessage(res, errTxt);
                 return respond(req, res, u);
             })
