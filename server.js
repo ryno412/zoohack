@@ -97,7 +97,7 @@ function respond(req, res, user){
         saveAndSend(res, user, chat[0]);
    } else if (chatPrompt === 'reportDone') {
        user.chatPrompt = 'reportType'
-       saveAndSend(res, user, `Hello ${input}. ${chat[1]}`);
+       saveAndSend(res, user, `Hello ${user.name}. ${chat[1]}`);
    }
    else if (chatPrompt === NAME) {
        user.name = input;
