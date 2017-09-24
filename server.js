@@ -211,6 +211,8 @@ app.post('/message', (req, res)=>{
       //saveOperations = mediaItems.map(mediaItem => SaveMedia(mediaItem));
       
       //getExif(mediaUrl);
+      detectLabels(mediaUrl);
+
       var name = count + '.txt';
       fs.writeFile(name, mediaUrl, function(err) {
         if(err) {
