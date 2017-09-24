@@ -33,6 +33,7 @@ var reportSchema = new mongoose.Schema({
 });
 
 var userSchema = new mongoose.Schema({
+    reportType: String,
     name: String,
     phone: {unique: true, type: String},
     age: { type: Number, min: 0},

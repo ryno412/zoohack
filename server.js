@@ -24,8 +24,9 @@ app.use(bodyParser.json());
 const errTxt = 'I am a little slow today. please send msg again';
 const chat = [
     'Hello! and welcome to the\n' +
-    'Jr Rangers Program!\n' +
-    'What is your Name?'
+    'Local Rangers Program!\n' +
+    'What is your Name?',
+    'Would you like to report a bird or nest?'
 ]
 
 const birdReportQuestions = [
@@ -33,7 +34,11 @@ const birdReportQuestions = [
     'Where did you find this bird?',
     'Did you see any tags or bands on the birds feet?',
     'Is the bird alone or with other birds?'
+]
 
+const nestReportQuestions = [
+    'Lets a make nest report. Is this a Green Macaw, Scarlet Macaw, or Tucan nest?',
+    'Where is this nest located?',
 ]
 
 const NAME = 'name';
@@ -53,11 +58,31 @@ function respond(req, res, user){
         saveAndSend(res, user, chat[0]);
    } else if (chatPrompt === NAME) {
        user.name = input;
-       user.chatPrompt = REPORT;
-       saveAndSend(res, user, `Hello ${input}. ${birdReportQuestions[0]}`);
+       user.chatPrompt = 'reportType'
+       saveAndSend(res, user, `Hello ${input}. ${chat[1]}`);
+
+   } else if (chatPrompt === 'reportType') {
+       user.chatPrompt = input === 'bird' ? REPORT : 'nest'
+       const msg = input === 'bird' ? birdReportQuestions[0]: nestReportQuestions[0];
+       saveAndSend(res, user, `Hello ${input}. ${msg}`);
+
+   } else if (chatPrompt === 'nest') {
+       user.chatPrompt = 'nest-1'
+       user.reports.push(new Report({
+           reportType:'nest',
+           bird: input,
+           FromCity: req.body.FromCity,
+           FromCountry: req.body.FromCountry,
+       }));
+       saveAndSend(res, user, `${nestReportQuestions[1]}`);
+   } else if (chatPrompt === 'nest-1') {
+       user.chatPrompt = 'image'
+       user.reports[user.reports.length -1].image = input;
+       saveAndSend(res, user, 'Can you upload a photo?');
 
    } else if (chatPrompt === REPORT) {// bird type
        user.reports.push(new Report({
+           reportType:'bird',
            bird: input,
            FromCity: req.body.FromCity,
            FromCountry: req.body.FromCountry,
