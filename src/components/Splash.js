@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Splash = props => {
+const Splash = props => (
   <div>
     <Link to="/home">
       <button onClick={props.fetchData}>Go to dashboard</button>
     </Link>
-  </div>;
-};
+  </div>
+);
 
 export default Splash;
