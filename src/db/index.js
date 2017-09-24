@@ -34,20 +34,16 @@ var userSchema = new mongoose.Schema({
     reports: [reportSchema]
 });
 
-// userSchema.updateLastChat = (lastQues, cb)=>{
-//
-// }
-
 
 var User = mongoose.model('Users', userSchema);
 var Report = mongoose.model('Report', reportSchema);
 
 // Clear out old data
-// User.remove({}, function(err) {
-//     if (err) {
-//         console.log ('error deleting old data.');
-//     }
-// });
+User.remove({}, function(err) {
+    if (err) {
+        console.log ('error deleting old data.');
+    }
+});
 
 
 module.exports = {
