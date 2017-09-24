@@ -92,7 +92,11 @@ function respond(req, res, user){
    if (!chatPrompt){
        user.chatPrompt = NAME;
         saveAndSend(res, user, chat[0]);
-   } else if (chatPrompt === NAME) {
+   } else if (chatPrompt === 'reportDone') {
+       user.chatPrompt = 'reportType'
+       saveAndSend(res, user, `Hello ${input}. ${chat[1]}`);
+   }
+   else if (chatPrompt === NAME) {
        user.name = input;
        user.chatPrompt = 'reportType'
        saveAndSend(res, user, `Hello ${input}. ${chat[1]}`);
@@ -137,7 +141,7 @@ function respond(req, res, user){
        saveAndSend(res, user, 'Can you upload a photo?')
    }
    else if (chatPrompt === 'image') {// image
-       user.chatPrompt = 'reportType'; ///reset chat
+       user.chatPrompt = 'reportDone'; ///reset chat
        user.reports[user.reports.length -1].image = req.body.MediaUrl0 ? req.body.MediaUrl0 : '' ;
        detectLabels(req.body.MediaUrl0).then(imageData =>{
            user.reports[user.reports.length -1].imageMeta = imageData;
