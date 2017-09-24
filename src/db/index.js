@@ -28,7 +28,7 @@ var reportSchema = new mongoose.Schema({
     tag: String,
     many:String,
     image: String,
-    imageMeta: Array,
+    imageMeta: [],
     FromCity: String,
     FromCountry: String,
 
