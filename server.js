@@ -3,7 +3,7 @@ const authToken = process.env.TW_KEY || 'deaf596b59bdc360252d0782a69b3b94';
 
 const twilio = require('twilio');
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
-//const client = new twilio(accountSid, authToken);
+const client = new twilio(accountSid, authToken);
 const express = require('express');
 const bodyParser = require('body-parser');
 const serveStatic = require('serve-static');
@@ -15,26 +15,11 @@ const db = require(__dirname + '/src/db')
 const User = db.User;
 const Report = db.Report;
 
-
-
 app.use(compression());
 app.use(serveStatic(`${__dirname}/dist/client`, { index: ['index.html', 'index.htm'] }));
 
-
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
-
-const report = {
-    birdName: 'macaw',
-    color: 'blue',
-    amountOfBirds: 'one ore more',
-    location: 'flight or grand',
-    tagged: 'yes',
-    marks: 'blue feathers,one eye',
-    nest: true,
-
-
-}
 
 const errTxt = 'I am a little slow today. please send msg again';
 const chat = [
@@ -44,9 +29,10 @@ const chat = [
 ]
 
 const birdReportQuestions = [
-    'Lets a make bird report. Describe the birds colors',
+    'Lets a make bird report. Describe the birds colors.',
     'Where did you find this bird?',
-    'Did you see any tags or bands on the birds feet?'
+    'Did you see any tags or bands on the birds feet?',
+    'Is the bird alone or with other birds?'
 
 ]
 
@@ -71,7 +57,11 @@ function respond(req, res, user){
        saveAndSend(res, user, `Hello ${input}. ${birdReportQuestions[0]}`);
 
    } else if (chatPrompt === REPORT) {// color
-       user.reports.push(new Report({color: input}));
+       user.reports.push(new Report({
+           color: input,
+           FromCity: req.body.FromCity,
+           FromCountry: req.body.FromCountry,
+       }));
        user.chatPrompt = `${REPORT}-0`;
        saveAndSend(res, user, `${birdReportQuestions[1]}`);
 
