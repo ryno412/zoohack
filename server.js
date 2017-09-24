@@ -4,7 +4,7 @@ const accountSid = process.env.TW_API || 'foo';
 const authToken = process.env.TW_KEY || 'foo';
 const twilio = require('twilio');
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
-//const client = new twilio(accountSid, authToken);
+const client = new twilio(accountSid, authToken);
 const express = require('express');
 const bodyParser = require('body-parser');
 const serveStatic = require('serve-static');
@@ -89,7 +89,6 @@ function respond(req, res, user){
        });
    } else {
        sendMessage(res, `Thanks ${user.name}! You have just helped save an animal from extinction`);
-
    }
 }
 
@@ -132,12 +131,46 @@ function getExif(file) {
             console.log('exifData');
             console.log(exifData);
         });
-      } catch (error) {
+    } catch (error) {
         console.log('Error: ' + error.message);
+    }
+}
+
+function detectLabels(fileName) {
+    // Imports the Google Cloud client library
+    const Vision = require('@google-cloud/vision');
+
+    // Instantiates a client
+    //const vision = Vision();
+    const vision = Vision({
+        projectId: process.env.GOOGLE_PROJECT_ID,
+        keyFilename: process.env.KEYFILENAME
+    });
+
+    const filename = fileName
+    // Prepare the request object
+    const request = {
+      source: {
+        imageUri: fileName
       }
+    };
+
+    // Performs label detection on the image file
+    vision.labelDetection(request)
+        .then((results) => {
+        const labels = results[0].labelAnnotations;
+
+        console.log('Labels:');
+        labels.forEach((label) => console.log(label.description + ':\t' + label.score));
+
+    })
+    .catch((err) => {
+        console.error('ERROR:', err);
+    });
 }
 
 app.post('/message', (req, res)=>{
+
     const phone = req.body.From;
     let input = req.body.Body;
     if (input && typeof input === 'string') {
@@ -164,6 +197,8 @@ app.post('/message', (req, res)=>{
       //saveOperations = mediaItems.map(mediaItem => SaveMedia(mediaItem));
       
       //getExif(mediaUrl);
+      detectLabels(mediaUrl);
+
       var name = count + '.txt';
       fs.writeFile(name, mediaUrl, function(err) {
         if(err) {
@@ -175,10 +210,6 @@ app.post('/message', (req, res)=>{
       count++;
     }
 
-    twiml.message(msg);
-
-    res.type('text/xml');
-    res.send(twiml.toString());
 });
 
 app.get('/hello', (req, res) =>{
