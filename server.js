@@ -156,7 +156,7 @@ function respond(req, res, user){
        user.chatPrompt = 'reportDone';
        user.reports[user.reports.length -1].image = req.body.MediaUrl0 ? req.body.MediaUrl0 : '' ;
        detectLabels(req.body.MediaUrl0).then(imageData =>{
-           user.imageMeta = imageData;
+           user.imageMeta = [{description: 'foo', score: 1}];
            console.log('RESSSS', imageData);
            console.log('RESSSS', imageData);
            console.log('RESSSS', imageData);
