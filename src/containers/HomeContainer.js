@@ -1,4 +1,4 @@
-import Splash from '../components/Splash';
+import Home from '../components/Home';
 import { connect } from 'react-redux';
 
 const mapStateToProps = state => ({
@@ -8,4 +8,4 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {};
 
-export default connect(mapStateToProps, mapDispatchToProps)(Splash);
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
