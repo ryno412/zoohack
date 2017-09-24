@@ -12,13 +12,7 @@ const compression = require('compression');
 const Vision = require('@google-cloud/vision');
 const app = express();
 const port = process.env.PORT || 3000;
-
-// File I/O 
 const path = require('path');
-
-
-// Image Metadata
-
 const db = require(__dirname + '/src/db')
 const User = db.User;
 const Report = db.Report;
@@ -28,10 +22,6 @@ app.use(serveStatic(`${__dirname}/dist/client`, { index: ['index.html', 'index.h
 
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
-
-// var images = []
-// var count = 0
-
 
 /* Google Cloud Vision */
 function detectLabels(fileName) {
@@ -73,14 +63,13 @@ const chat = [
 ]
 
 const birdReportQuestions = [
-    'Lets a make bird report. Is this a Green Macaw, Scarlet Macaw, or Tucan?',
+    'Lets a make bird report. Is this a Green Macaw, Scarlet Macaw, or Toucan?',
     'Where are you located?',
-    'Did you see any tags or bands on the birds feet?',
-    'Is the bird alone or with other birds?'
+    'Did you see any tags or bands on the birds feet?'
 ]
 
 const nestReportQuestions = [
-    'Lets a make nest report. Is this a Green Macaw, Scarlet Macaw, or Tucan nest?',
+    'Lets a make nest report. Is this a Green Macaw, Scarlet Macaw, or Toucan nest?',
     'Where are you located?',
 ]
 
@@ -143,17 +132,12 @@ function respond(req, res, user){
        saveAndSend(res, user, birdReportQuestions[2])
    }
    else if (chatPrompt === `${REPORT}-1`) {//tag
-       user.chatPrompt = `${REPORT}-2`;
-       user.reports[user.reports.length -1].tag = input;
-       saveAndSend(res, user, birdReportQuestions[3])
-   }
-   else if (chatPrompt === `${REPORT}-2`) {// many
        user.chatPrompt = 'image';
-       user.reports[user.reports.length -1].many = input;
+       user.reports[user.reports.length -1].tag = input;
        saveAndSend(res, user, 'Can you upload a photo?')
    }
-   else if (chatPrompt === 'image') {// many
-       user.chatPrompt = 'reportDone';
+   else if (chatPrompt === 'image') {// image
+       user.chatPrompt = 'reportType'; ///reset chat
        user.reports[user.reports.length -1].image = req.body.MediaUrl0 ? req.body.MediaUrl0 : '' ;
        detectLabels(req.body.MediaUrl0).then(imageData =>{
            user.reports[user.reports.length -1].imageMeta = imageData;
