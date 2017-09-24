@@ -6,13 +6,11 @@ import HomeContainer from '../containers/HomeContainer';
 
 const Main = props => (
   <div>
-    <main>
       <AppBar title="Bird Rangers" />
       <Switch>
         <Route exact path="/" component={SplashContainer} />
         <Route exact path="/home" component={HomeContainer} />
       </Switch>
-    </main>
   </div>
 );
 
