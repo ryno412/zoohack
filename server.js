@@ -17,14 +17,10 @@ const User = db.User;
 const Report = db.Report;
 
 app.use(compression());
-app.use(
-  serveStatic(`${__dirname}/dist/client`, {
-    index: ['index.html', 'index.htm']
-  })
-);
-
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(serveStatic(`${__dirname}/dist/client`, {index: ['index.html', 'index.htm']}));
+
 
 /* Google Cloud Vision */
 function detectLabels(fileName) {
@@ -243,6 +239,7 @@ app.get('/delete', (req, res) => {
     }
   });
 });
+
 app.get('*', (req, res) => {
   res.sendfile(`${__dirname}/dist/client/index.html`);
 });

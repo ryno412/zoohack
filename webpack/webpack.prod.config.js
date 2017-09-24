@@ -16,7 +16,7 @@ module.exports = merge(baseConfig, {
     path: path.resolve(__dirname, '../dist/client'),
     filename: '[name][hash].min.js',
     sourceMapFilename: '[name][hash].map',
-    publicPath: '/',
+    publicPath: '',
   },
   module: {
     rules: [
