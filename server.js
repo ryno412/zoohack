@@ -10,9 +10,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const serveStatic = require('serve-static');
 const compression = require('compression');
-const extName = require('ext-name');
-const path = require('path');
-const urlUtil = require('url');
 
 var ExifImage = require('exif').ExifImage;
 
@@ -265,6 +262,19 @@ app.post('/message', (req, res) => {
       }
     }
   );
+});
+
+app.get('/results', (req, res) => {
+  User.find({}).exec(function(err, result) {
+    console.log(err, result);
+    if (result) {
+      res.status(200);
+      res.send(result);
+    } else {
+      res.status(400);
+      res.send(err);
+    }
+  });
 });
 
 app.get('/health', (req, res) => {
