@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const accountSid = process.env.TW_API || 'foo';
 const authToken = process.env.TW_KEY || 'foo';
 
@@ -29,6 +31,9 @@ app.use(serveStatic(`${__dirname}/dist/client`, { index: ['index.html', 'index.h
 
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
+
+var images = []
+var count = 0
 
 const errTxt = 'I am a little slow today. please send msg again';
 const chat = [
