@@ -54,10 +54,9 @@ function detectLabels(fileName) {
     // Performs label detection on the image file
     return vision.labelDetection(request)
         .then((results) => {
-            const labels = results[0].labelAnnotations;
-            console.log('Labels:');
-            labels.forEach((label) => console.log(label.description + ':\t' + label.score));
-            return results;
+            if (results && Array.isArray(results) && results[0]){
+                return results[0].labelAnnotations;
+            }
         })
         .catch((err) => {
             throw new Error('no image')
