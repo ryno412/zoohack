@@ -21,7 +21,7 @@ mongoose.connect(uristring, function (err, res) {
 });
 
 var reportSchema = new mongoose.Schema({
-    // phone number of participant
+    reportType: String,
     bird: String,
     color: String,
     location:String,
@@ -33,7 +33,6 @@ var reportSchema = new mongoose.Schema({
 });
 
 var userSchema = new mongoose.Schema({
-    reportType: String,
     name: String,
     phone: {unique: true, type: String},
     age: { type: Number, min: 0},

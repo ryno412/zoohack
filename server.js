@@ -69,7 +69,7 @@ function respond(req, res, user){
    } else if (chatPrompt === 'nest') {
        user.chatPrompt = 'nest-1'
        user.reports.push(new Report({
-           reportType:'nest',
+           reportType: 'nest',
            bird: input,
            FromCity: req.body.FromCity,
            FromCountry: req.body.FromCountry,
