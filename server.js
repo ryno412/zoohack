@@ -91,7 +91,6 @@ function respond(req, res, user){
        sendMessage(res, `Thanks ${user.name}! You have just helped save an animal from extinction`);
 
    }
-
 }
 
 const sendMessage = (response, message) => {
@@ -220,10 +219,10 @@ app.get('/results', (req, res) =>{
 
 
 app.get('/results', (req, res) =>{
-        User.find({}).exec(function(err, result) {
-            console.log(err, result);
-            res.send(result)
-        });
+    User.find({}).exec(function(err, result) {
+        console.log(err, result);
+        res.send(result)
+    });
 });
 
 app.get('/health', (req, res)=>{
@@ -241,9 +240,3 @@ app.get('*', (req, res) => {
 app.listen(port, ()=>{
     console.log(`Server started on port${port} - oh ya!`);
 })
-
-
-
-
-
-
