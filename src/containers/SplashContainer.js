@@ -5,7 +5,7 @@ import dataOperations from '../state/ducks/data/operations';
 const mapStateToProps = state => ({});
 
 const mapDispatchToProps = {
-  fetchData: 'foo'//dataOperations.fetchData
+  fetchData: dataOperations.fetchData
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Splash);
