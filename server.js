@@ -1,3 +1,5 @@
+//require('dotenv').config()
+
 const accountSid = process.env.TW_API || 'foo';
 const authToken = process.env.TW_KEY || 'foo';
 const twilio = require('twilio');
@@ -18,11 +20,8 @@ const port = process.env.PORT || 5000;
 
 const db = require(__dirname + '/src/db');
 
-
-
 app.use(compression());
 app.use(serveStatic(`${__dirname}/dist/client`, { index: ['index.html', 'index.htm'] }));
-
 
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
@@ -32,13 +31,11 @@ var images = []
 const report = {
     birdName: 'macaw',
     color: 'blue',
-    amountOfBirds: 'one ore more',
-    location: 'flight or grand',
+    amountOfBirds: 'one or more',
+    location: 'flight or ground',
     tagged: 'yes',
-    marks: 'blue feathers,one eye',
+    marks: 'blue feathers, one eye',
     nest: true,
-
-
 }
 
 function respond(message) {
@@ -68,6 +65,15 @@ function fetchRecentImages(req, res) {
     clearRecentImages();
 }
 
+function deleteMediaItem(mediaItem) {
+    const client = getTwilioClient();
+
+    return client
+      .api.accounts(twilioAccountSid)
+      .messages(mediaItem.MessageSid)
+      .media(mediaItem.mediaSid).remove();
+}
+
 function getExif(file) {
     console.log("getExif")
     try {
@@ -77,7 +83,6 @@ function getExif(file) {
         else
             console.log('exifData');
             console.log(exifData);
-
         });
       } catch (error) {
         console.log('Error: ' + error.message);
@@ -115,9 +120,6 @@ app.post('/message', (req, res)=>{
       //saveOperations = mediaItems.map(mediaItem => SaveMedia(mediaItem));
     }
 
-    clearRecentImages()
-
-
     twiml.message(msg);
 
     res.type('text/xml');
@@ -135,23 +137,19 @@ app.get('/hello', (req, res) =>{
     })
 })
 
-
 app.get('/results', (req, res) =>{
-        db.find({}).exec(function(err, result) {
-            console.log(err, result);
-            res.send(result)
-        });
+    db.find({}).exec(function(err, result) {
+        console.log(err, result);
+        res.send(result)
+    });
 });
+
 app.get('/health', (req, res)=>{
     res.send('ok');
 })
 
 app.get('/exif', (req, res)=>{
     // getExif('src/IMG_2709.jpg');
-    // getExif('src/IMG_2737.jpg');
-    // getExif('src/flower.jpg');
-    getExif('src/IMG_2739.jpg');
-    getExif('src/IMG_2739 2.jpg');
 })
 
 app.get('*', (req, res) => {
