@@ -108,8 +108,7 @@ function respond(req, res, user) {
     saveAndSend(res, user, `Hello ${input}. ${chat[1]}`);
   } else if (chatPrompt === 'reportType') {
     user.chatPrompt = input === 'bird' ? REPORT : 'nest';
-    const msg =
-      input === 'bird' ? birdReportQuestions[0] : nestReportQuestions[0];
+    const msg = input === 'bird' ? birdReportQuestions[0] : nestReportQuestions[0];
     saveAndSend(res, user, `${msg}`);
   } else if (chatPrompt === 'nest') {
     user.chatPrompt = 'nest-1';
