@@ -6,6 +6,8 @@ import FlatButton from 'material-ui/FlatButton';
 const style = {
     width: '90%',
     margin: '20px auto',
+    overflow: 'hidden',
+    padding: '18px',
 };
 const Home = props => {
 
@@ -16,11 +18,12 @@ const Home = props => {
   console.log(props.data, 'DDD');
   let mapped = props.data.map((item, i) => {
     return (
-    <Paper style={style} zDepth={1} key={i}>
+
       <div key={i} className="report-container">
-          {item.reports.map(report =>{
+          {item.reports.map((report, j) =>{
               return (
-                  <div key={`${i}rc`}>
+                  <Paper style={style} zDepth={1} key={j}>
+                  <div key={`${j}drc`}>
                       <h1 className="report-heading">Field Report</h1>
                       <img width="200" height="150" src={report.image}></img>
                       <div key={`report${i}`} className="report">
@@ -34,14 +37,14 @@ const Home = props => {
                       <div className="classifications-container">
                           {report.imageMeta.map((meta, k) =>{
                               return (
-                                  <div key={`mm${meta.description}`} className="meta">
+                                  <div key={`mm${k}`} className="meta">
                                           <p className="des">{meta.description}</p><p className="score">{(meta.score  * 100).toFixed(0)}%</p></div>)
                           })}
                       </div>
-                  </div>  )
+                  </div>     </Paper> )
           })}
       </div>
-    </Paper>
+
     );
   });
 
