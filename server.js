@@ -118,8 +118,11 @@ app.post('/message', (req, res)=>{
             return res.send('not ok :(')
         }
         if (!user){
-            let o = Object.assign({phone: phone}, req.body)
-            let u = new User (o);
+            let u = new User ({
+                phone: phone,
+                FromCity: req.body.FromCity,
+                FromCountry: req.body.FromCountry,
+            });
             u.save((err, userRecord) =>{
                 if (err) return sendMessage(res, errTxt);
                 return respond(req, res, u);

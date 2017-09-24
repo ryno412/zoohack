@@ -26,6 +26,8 @@ var reportSchema = new mongoose.Schema({
     color: String,
     location:String,
     tag: String,
+    FromCity: String,
+    FromCountry: String,
 });
 
 var userSchema = new mongoose.Schema({
@@ -33,7 +35,10 @@ var userSchema = new mongoose.Schema({
     phone: {unique: true, type: String},
     age: { type: Number, min: 0},
     chatPrompt: String,
-    reports: [reportSchema]
+    reports: [reportSchema],
+    FromCity: String,
+    FromCountry: String,
+
 });
 
 
