@@ -29,7 +29,7 @@ const chat = [
 ]
 
 const birdReportQuestions = [
-    'Lets a make bird report.\n Is this a Green Macaw, Scarlet Macaw, or Tucan?',
+    'Lets a make bird report. Is this a Green Macaw, Scarlet Macaw, or Tucan?',
     'Where did you find this bird?',
     'Did you see any tags or bands on the birds feet?',
     'Is the bird alone or with other birds?'
@@ -73,7 +73,7 @@ function respond(req, res, user){
    else if (chatPrompt === `${REPORT}-1`) {//tag
        user.chatPrompt = `${REPORT}-2`;
        user.reports[user.reports.length -1].tag = input;
-       saveAndSend(res, user, `Thanks ${user.name}! You have just helped save an animal from extinction`)
+       saveAndSend(res, user, birdReportQuestions[3])
    }
    else if (chatPrompt === `${REPORT}-2`) {// many
        user.chatPrompt = 'image';
