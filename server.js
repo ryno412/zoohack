@@ -54,7 +54,10 @@ const REPORT = 'report';
 
 function updateUser (user, key, value, prompt, cb){
     user.chatPrompt = prompt;
-    if (key === REPORT) {
+    if (key === REPORT){
+        user.reportInProgress = true;
+    }
+    if (key === 'report-0') {
         user.reports.push(value);
     }
     if (key && value){
