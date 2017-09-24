@@ -54,6 +54,9 @@ const REPORT = 'report';
 
 function updateUser (user, key, value, prompt, cb){
     user.chatPrompt = prompt;
+    if (key === REPORT) {
+        user.reports.push(value);
+    }
     if (key && value){
         user[key] = value;
     }
@@ -77,7 +80,7 @@ function respond(req, res, user){
            sendMessage(res, `Hello ${input}. ${chat[1]}`);
        });
    } else if (chatPrompt === REPORT) {
-       updateUser(user, REPORT, [new Report({color: input})], `${REPORT}-1`, (err)=>{
+       updateUser(user, REPORT, [new Report({color: input})], `${REPORT}-0`, (err)=>{
            if (err) return sendMessage(res, errTxt);
            sendMessage(res, `${chat[2]}`);
        });
@@ -96,10 +99,6 @@ const sendMessage = (response, message) => {
     response.type('text/xml');
     response.send(twiml.toString());
 }
-
-
-
-
 
 
 app.post('/message', (req, res)=>{
