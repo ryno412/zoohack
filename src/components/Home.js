@@ -9,14 +9,16 @@ const style = {
     overflow: 'hidden',
     padding: '18px',
 };
-const Home = props => {
 
-  if (props.loading) {
-    return <CircularProgress />;
-  }
+class Home extends React.Component {
 
-  console.log(props.data, 'DDD');
-  let mapped = props.data.map((item, i) => {
+    componentDidMount() {
+        this.props.fetchData();
+    }
+
+    render() {
+        const {loading, data} = this.props;
+          let mapped = data.map((item, i) => {
     return (
 
       <div key={i} className="report-container">
@@ -48,11 +50,24 @@ const Home = props => {
     );
   });
 
-  return (
-    <div>
-      {mapped.length > 0 ? (mapped) : (<div className="error">No records found</div>)}
-    </div>
-  );
-};
+
+        return do {
+            if (loading) {
+              <div className="loading-container">
+                <CircularProgress />;
+              </div>
+            } else if (mapped.length > 0) {
+              <div>
+                  {mapped}
+              </div>
+            }
+              else {
+                <div className="error">No records found</div>
+                }
+            };
+
+        }
+}
+
 
 export default Home;
