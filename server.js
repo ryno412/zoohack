@@ -52,8 +52,10 @@ function saveAndSend(res, user, msg) {
 }
 function respond(req, res, user){
    const chatPrompt = user.chatPrompt;
-   const input = req.body.Body;
-
+   let input = req.body.Body;
+    if (input && typeof input === 'string') {
+        input = input.toLowerCase().trim();
+    }
    console.log(input, 'IIIIIII');
    console.log(input, 'IIIIIII');
    console.log(input, 'IIIIIII');
