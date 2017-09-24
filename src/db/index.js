@@ -21,15 +21,19 @@ mongoose.connect(uristring, function (err, res) {
 });
 
 var reportSchema = new mongoose.Schema({
-    // phone number of participant
+    reportType: String,
     bird: String,
     color: String,
     location:String,
     tag: String,
     many:String,
     image: String,
+    imageMeta: [
+        {description: String, score: Number}
+    ],
     FromCity: String,
     FromCountry: String,
+
 });
 
 var userSchema = new mongoose.Schema({
