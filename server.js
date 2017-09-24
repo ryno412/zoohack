@@ -144,6 +144,7 @@ app.get('/results', (req, res) => {
     res.send(result);
   });
 });
+
 app.get('/health', (req, res) => {
   res.send('ok');
 });
@@ -162,10 +163,6 @@ app.get('*', (req, res) => {
 
 app.get('/health', (req, res) => {
   res.send('ok');
-});
-
-app.get('/mock-data', (req, res) => {
-  res.json(report);
 });
 
 app.get('*', (req, res) => {

@@ -28,14 +28,14 @@ export const fetchData = id => {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' }
     };
-    return fetch(`${apiUrl}mock-data`, params)
+    return fetch(`${apiUrl}results`, params)
       .then(
         response => response.json(),
         error => console.log('An error occured.', error)
       )
       .then(res => {
-        if (res.report) {
-          dispatch(setData(res.report));
+        if (res.results) {
+          dispatch(setData(res.results));
           dispatch(fetchDataSuccess());
         } else {
           dispatch(fetchDataFailure(res.error));
