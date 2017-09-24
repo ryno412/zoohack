@@ -1,10 +1,10 @@
-//require('dotenv').config()
+require('dotenv').config()
 
 const accountSid = process.env.TW_API || 'foo';
 const authToken = process.env.TW_KEY || 'foo';
 const twilio = require('twilio');
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
-//const client = new twilio(accountSid, authToken);
+const client = new twilio(accountSid, authToken);
 const express = require('express');
 const bodyParser = require('body-parser');
 const serveStatic = require('serve-static');
@@ -12,6 +12,7 @@ const compression = require('compression');
 const extName = require('ext-name');
 const path = require('path');
 const urlUtil = require('url');
+const fs = require('fs')
 
 var ExifImage = require('exif').ExifImage;
 
@@ -27,6 +28,7 @@ app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
 
 var images = []
+var count = 0
 
 const report = {
     birdName: 'macaw',
@@ -118,6 +120,17 @@ app.post('/message', (req, res)=>{
 
       mediaItems.push({ mediaSid, MessageSid, mediaUrl, filename });
       //saveOperations = mediaItems.map(mediaItem => SaveMedia(mediaItem));
+      
+      //getExif(mediaUrl);
+      var name = count + '.txt';
+      fs.writeFile(name, mediaUrl, function(err) {
+        if(err) {
+            return console.log(err);
+        }
+
+        console.log("The file was saved!");
+      });
+      count++;
     }
 
     twiml.message(msg);
