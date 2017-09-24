@@ -31,14 +31,14 @@ const chat = [
 
 const birdReportQuestions = [
     'Lets a make bird report. Is this a Green Macaw, Scarlet Macaw, or Tucan?',
-    'Where did you find this bird?',
+    'Where are you located?',
     'Did you see any tags or bands on the birds feet?',
     'Is the bird alone or with other birds?'
 ]
 
 const nestReportQuestions = [
     'Lets a make nest report. Is this a Green Macaw, Scarlet Macaw, or Tucan nest?',
-    'Where is this nest located?',
+    'Where are you located?',
 ]
 
 const NAME = 'name';
@@ -53,13 +53,9 @@ function saveAndSend(res, user, msg) {
 function respond(req, res, user){
    const chatPrompt = user.chatPrompt;
    let input = req.body.Body;
-    if (input && typeof input === 'string') {
+    if (input && typeof input === 'string' && chatPrompt !== NAME) {
         input = input.toLowerCase().trim();
     }
-   console.log(input, 'IIIIIII');
-   console.log(input, 'IIIIIII');
-   console.log(input, 'IIIIIII');
-   console.log(input, 'IIIIIII');
 
    if (!chatPrompt){
        user.chatPrompt = NAME;
