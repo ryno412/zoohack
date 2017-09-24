@@ -1,13 +1,18 @@
 html, body {margin:0; padding:0;}
-
+.item > div {float:left; display: inline-block; margin-right: 10px;}
+.report {clear:both;
+  img {float: left; margin:0 10px 5px 0;}
+  & > div {float:left; margin-right: 8px }
+  .meta {clear: both;}
+}
 .heading {
   font-size: 24px;
   color: #454545;
 }
 
 .item {
-  width: 80%;
-  height: 20vh;
-  color: green;
-  border: 2px solid black;
+  overflow: hidden;
+  padding:5px 10px;
+  color: #454545;
+  border-bottom: 1px solid gainsboro;
 }

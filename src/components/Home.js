@@ -18,23 +18,33 @@ const Home = props => {
   //   }
   // ];
 
+    console.log(props.data, 'data');
   let mapped = props.data.map((item, i) => {
     return (
       <div key={i} className="item">
-        <div>Name: {item.name}</div>
-        <div>Phone: {item.phone}</div>
-        <div>Age: {item.age}</div>
+          {item.reports.map(report =>{
+              return (<div key={`report${i}`} className="report">
+                      <img width="200" height="150" src={report.image}></img>
+                      <div>Name: {item.name}</div>
+                      <div>Phone: {item.phone}</div>
+                  <div> report type {report.reportType}</div>
+                  <div> bird {report.bird}</div>
+                  <div> location {report.location}</div>
+                      {report.imageMeta.map(meta =>{
+                          return (<div key={`rr${meta.description}`} className="meta">
+                              <div>Description {meta.description} - Score {meta.score}</div>
+                          </div>)
+                      })}
+                  </div>
+              )
+          })}
       </div>
     );
   });
 
   return (
     <div>
-      {mapped.length > 0 ? (
-        mapped
-      ) : (
-        <div className="error">No records found</div>
-      )}
+      {mapped.length > 0 ? (mapped) : (<div className="error">No records found</div>)}
     </div>
   );
 };
