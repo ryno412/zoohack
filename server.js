@@ -56,7 +56,7 @@ function detectLabels(fileName) {
 
 const errTxt = 'I am a little slow today. please send msg again';
 const chat = [
-    'Hello! and welcome to the\n' +
+    'Hola! and welcome to the\n' +
     'Local Rangers Program!\n' +
     'What is your Name?',
     'Would you like to report a bird or nest?'
@@ -64,13 +64,13 @@ const chat = [
 
 const birdReportQuestions = [
     'Lets a make bird report. Is this a Green Macaw, Scarlet Macaw, or Toucan?',
-    'Where are you located?',
+    'Dónde están ubicados?',
     'Did you see any tags or bands on the birds feet?'
 ]
 
 const nestReportQuestions = [
     'Lets a make nest report. Is this a Green Macaw, Scarlet Macaw, or Toucan nest?',
-    'Where are you located?',
+    'Dónde están ubicados?',
 ]
 
 const NAME = 'name';
@@ -78,7 +78,10 @@ const REPORT = 'report';
 
 function saveAndSend(res, user, msg) {
     user.save((err, data) =>{
-        if (err) return sendMessage(res, errTxt);
+        if (err)  {
+            user.chatPrompt = null;
+            return sendMessage(res, errTxt);
+        }
         sendMessage(res, msg);
     });
 }
@@ -144,9 +147,12 @@ function respond(req, res, user){
        user.chatPrompt = 'reportDone'; ///reset chat
        user.reports[user.reports.length -1].image = req.body.MediaUrl0 ? req.body.MediaUrl0 : '' ;
        detectLabels(req.body.MediaUrl0).then(imageData =>{
-           user.reports[user.reports.length -1].imageMeta = imageData;
+           if (imageData) {
+               user.reports[user.reports.length -1].imageMeta = imageData;
+           }
            saveAndSend(res, user, `Thanks ${user.name}! You have just helped save an animal from extinction`)
        }).catch(e =>{
+           user.chatPrompt = null;
            sendMessage(res, errTxt);
        })
    }
