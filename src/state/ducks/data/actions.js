@@ -32,6 +32,7 @@ export const fetchData = id => {
       .then(response => {
         if (response.status === 200) {
           return response.json().then(res => {
+            console.log(res);
             dispatch(setData(res));
             dispatch(fetchDataSuccess());
           });

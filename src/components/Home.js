@@ -13,6 +13,7 @@ const Home = props => {
     return <CircularProgress />;
   }
 
+  console.log(props.data, 'DDD');
   let mapped = props.data.map((item, i) => {
     return (
     <Paper style={style} zDepth={1} key={i}>

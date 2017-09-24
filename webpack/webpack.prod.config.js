@@ -49,7 +49,7 @@ module.exports = merge(baseConfig, {
         'NODE_ENV': JSON.stringify('production')
       }
     }),
-    new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } }),
+    //new webpack.optimize.UglifyJsPlugin({ compress: { warnings: false } }),
     new CopyWebpackPlugin([
         { from: '../src/assets', to: path.resolve(__dirname, '../dist/client/assets'), },
       ]
