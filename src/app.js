@@ -9,6 +9,7 @@ import { withRouter } from 'react-router-dom';
 import { BrowserRouter } from 'react-router-dom';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import MainContainer from './containers/MainContainer';
+import './styles/app.scss';
 require('babel-core/register');
 require('babel-polyfill');
 

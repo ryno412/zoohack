@@ -29,17 +29,18 @@ export const fetchData = id => {
       headers: { 'Content-Type': 'application/json' }
     };
     return fetch(`${apiUrl}results`, params)
-      .then(
-        response => response.json(),
-        error => console.log('An error occured.', error)
-      )
-      .then(res => {
-        if (res.length != 0) {
-          dispatch(setData(res));
-          dispatch(fetchDataSuccess());
+      .then(response => {
+        if (response.status === 200) {
+          return response.json().then(res => {
+            dispatch(setData(res));
+            dispatch(fetchDataSuccess());
+          });
         } else {
           dispatch(fetchDataFailure(res));
         }
+      })
+      .catch(error => {
+        dispatch(fetchDataFailure(error));
       });
   };
 };

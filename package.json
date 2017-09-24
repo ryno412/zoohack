@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack-dev-server  --hot --inline --config ./webpack/webpack.dev.config.js",
+    "start":
+      "webpack-dev-server  --hot --inline --config ./webpack/webpack.dev.config.js",
     "start:server": "node server.js",
     "build": "webpack --progress --config ./webpack/webpack.prod.config.js"
   },
@@ -59,7 +60,7 @@
     "express": "^4.15.4",
     "ext-name": "^5.0.0",
     "immutable": "^3.8.1",
-    "material-ui": "^0.17.4",
+    "material-ui": "^0.19.2",
     "moment": "^2.18.1",
     "mongoose": "^4.11.12",
     "react": "^15.6.1",

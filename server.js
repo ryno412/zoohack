@@ -141,6 +141,11 @@ app.post('/message', (req, res) => {
 app.get('/results', (req, res) => {
   User.find({}).exec(function(err, result) {
     console.log(err, result);
+    if (result) {
+      res.status(200);
+    } else {
+      res.status(400);
+    }
     res.send(result);
   });
 });
