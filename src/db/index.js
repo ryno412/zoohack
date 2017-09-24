@@ -28,8 +28,10 @@ var reportSchema = new mongoose.Schema({
     tag: String,
     many:String,
     image: String,
+    imageMeta: Array,
     FromCity: String,
     FromCountry: String,
+
 });
 
 var userSchema = new mongoose.Schema({

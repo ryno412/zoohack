@@ -55,10 +55,8 @@ function detectLabels(fileName) {
     return vision.labelDetection(request)
         .then((results) => {
             const labels = results[0].labelAnnotations;
-
             console.log('Labels:');
             labels.forEach((label) => console.log(label.description + ':\t' + label.score));
-
         })
         .catch((err) => {
             console.error('ERROR:', err);
@@ -156,58 +154,21 @@ function respond(req, res, user){
    else if (chatPrompt === 'image') {// many
        user.chatPrompt = 'reportDone';
        user.reports[user.reports.length -1].image = req.body.MediaUrl0 ? req.body.MediaUrl0 : '' ;
-       detectLabels(req.body.MediaUrl0).then(res =>{
-           console.log('RESSSS', res);
-           console.log('RESSSS', res);
-           console.log('RESSSS', res);
-           console.log('RESSSS', res);
+       detectLabels(req.body.MediaUrl0).then(imageData =>{
+           user.imageMeta = imageData;
+           console.log('RESSSS', imageData);
+           console.log('RESSSS', imageData);
+           console.log('RESSSS', imageData);
+           console.log('RESSSS', imageData);
            saveAndSend(res, user, `Thanks ${user.name}! You have just helped save an animal from extinction`)
+       }).catch(e =>{
+           sendMessage(res, errTxt);
        })
    }
    else {
        sendMessage(res, `Thanks ${user.name}! You have just helped save an animal from extinction`);
    }
 }
-
-
-/* exif */
-// function getRecentImages() {
-//     return images;
-// }
-//
-// function clearRecentImages() {
-//     images = [];
-// }
-//
-// function fetchRecentImages(req, res) {
-//     res.status(200).send(getRecentImages());
-//     clearRecentImages();
-// }
-
-// function deleteMediaItem(mediaItem) {
-//     const client = getTwilioClient();
-//
-//     return client
-//       .api.accounts(twilioAccountSid)
-//       .messages(mediaItem.MessageSid)
-//       .media(mediaItem.mediaSid).remove();
-// }
-
-// function getExif(file) {
-//     console.log("getExif")
-//     try {
-//         new ExifImage({ image : file }, function (error, exifData) {
-//         if (error)
-//             console.log('Error: ' + error.message);
-//         else
-//             console.log('exifData');
-//             console.log(exifData);
-//         });
-//       } catch (error) {
-//         console.log('Error: ' + error.message);
-//       }
-// }
-
 
 
 const sendMessage = (response, message) => {
