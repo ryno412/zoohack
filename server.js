@@ -60,35 +60,6 @@ const chatExistingUser = [
 const NAME = 'name';
 const REPORT = 'report';
 
-function updateUser (user, key, value, prompt, cb){
-    user.chatPrompt = prompt;
-    if (key === REPORT){
-        user.reportInProgress = true;
-    }
-    if (prompt === 'report-0') {
-        user.reports.push(value);
-    }
-    if (prompt === 'report-1') {
-        const r = user.reports[user.reports.length - 1];
-        r.color = value;
-    }
-    if (prompt === 'report-2') {
-        const r = user.reports[user.reports.length - 1];
-        r.location = value;
-    }
-    if (prompt === 'report-3') {
-        const r = user.reports[user.reports.length - 1];
-        r.tag = value;
-    }
-    if (key && value){
-        user[key] = value;
-    }
-
-    user.save((err, data) =>{
-        return cb(err, data)
-    });
-}
-
 
 function saveAndSend(res, user, msg) {
     user.save((err, data) =>{
@@ -127,10 +98,6 @@ function respond(req, res, user){
        sendMessage(res, `Thanks ${user.name}! You have just helped save an animal from extinction`);
 
    }
-   console.log('SAVING');
-    user.save((err, data) =>{
-        return cb(err, data)
-    });
 }
 
 
