@@ -57,7 +57,7 @@ function updateUser (user, key, value, prompt, cb){
     if (key === REPORT){
         user.reportInProgress = true;
     }
-    if (key === 'report-0') {
+    if (prompt === 'report-0') {
         console.log('ADDING REPORT');
         user.reports.push(value);
     }
