@@ -1,10 +1,10 @@
-require('dotenv').config()
+//require('dotenv').config()
 
 const accountSid = process.env.TW_API || 'foo';
 const authToken = process.env.TW_KEY || 'foo';
 const twilio = require('twilio');
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
-const client = new twilio(accountSid, authToken);
+//const client = new twilio(accountSid, authToken);
 const express = require('express');
 const bodyParser = require('body-parser');
 const serveStatic = require('serve-static');
@@ -19,7 +19,9 @@ var ExifImage = require('exif').ExifImage;
 const app = express();
 const port = process.env.PORT || 5000;
 
-const db = require(__dirname + '/src/db');
+const db = require(__dirname + '/src/db')
+const User = db.User;
+const Report = db.Report;
 
 app.use(compression());
 app.use(serveStatic(`${__dirname}/dist/client`, { index: ['index.html', 'index.htm'] }));
@@ -40,19 +42,64 @@ const report = {
     nest: true,
 }
 
-function respond(message) {
-    var twiml = new MessagingResponse();
+const errTxt = 'I am a little slow today. please send msg again';
+const chat = [
+    'Hello! and welcome to the\n' +
+    'Jr Rangers Program!\n' +
+    'What is your Name?',
+    'Lets a make bird report. Describe the birds colors',
+    'Where did you find this bird?'
+]
+
+const chatExistingUser = [
+    'Where did you find this bird?'
+]
+
+const NAME = 'name';
+const REPORT = 'report';
+
+function updateUser (user, key, value, prompt, cb){
+    user.chatPrompt = prompt;
+    if (key && value){
+        user[key] = value;
+    }
+    user.save((err, data) =>{
+        return cb(err, data)
+    });
+}
+
+function respond(req, res, user){
+   const chatPrompt = user.chatPrompt;
+   const input = req.body.Body;
+
+   if (!chatPrompt){
+       updateUser(user, null, null, NAME, (err)=>{
+           if (err) return sendMessage(res, errTxt);
+           sendMessage(res, chat[0]);
+       });
+   } else if (chatPrompt === NAME) {
+       updateUser(user, NAME, input, REPORT, (err)=>{
+           if (err) return sendMessage(res, errTxt);
+           sendMessage(res, `Hello ${input}. ${chat[1]}`);
+       });
+   } else if (chatPrompt === REPORT) {
+       updateUser(user, REPORT, [new Report({color: input})], `${REPORT}-1`, (err)=>{
+           if (err) return sendMessage(res, errTxt);
+           sendMessage(res, `${chat[2]}`);
+       });
+   } else {
+       sendMessage(res, `Thanks ${user.name}! You have just helped save an animal from extinction`);
+
+   }
+
+}
+
+const sendMessage = (response, message) => {
+    const twiml = new MessagingResponse();
     twiml.message(message);
     response.type('text/xml');
     response.send(twiml.toString());
 }
-
-const chat = [
-    'Hello! and welcome to the\n' +
-    'Jr Rangers Program!\n' +
-    'Are you ready to get started?',
-    'Lets make your first bird report. Describe the birds colors'
-]
 
 function getRecentImages() {
     return images;
@@ -100,10 +147,6 @@ app.post('/message', (req, res)=>{
     console.log("*******")
     console.log(JSON.stringify(req.body));
     console.log("*******")
-
-    const twiml = new MessagingResponse();
-    let msg = chat[0];
-    if (input == 'yes') msg = chat[1];
 
 
     const { body } = req;
@@ -155,6 +198,32 @@ app.get('/results', (req, res) =>{
         console.log(err, result);
         res.send(result)
     });
+    User.findOne({
+        phone: phone,
+    }, function(err, user) {
+        if (err){
+            return res.send('not ok :(')
+        }
+        if (!user){
+            let u = new User ({phone: phone});
+            u.save((err, userRecord) =>{
+                console.log(err,'ERROR');
+                console.log(userRecord, 'RECORD');
+                if (err) return sendMessage(res, errTxt);
+                return respond(req, res, u);
+            })
+        } else {
+            return respond(req, res, user);
+        }
+    });
+});
+
+
+app.get('/results', (req, res) =>{
+        User.find({}).exec(function(err, result) {
+            console.log(err, result);
+            res.send(result)
+        });
 });
 
 app.get('/health', (req, res)=>{
