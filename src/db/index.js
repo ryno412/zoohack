@@ -26,6 +26,8 @@ var reportSchema = new mongoose.Schema({
     color: String,
     location:String,
     tag: String,
+    many:String,
+    image: String,
     FromCity: String,
     FromCountry: String,
 });

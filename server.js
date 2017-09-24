@@ -29,7 +29,7 @@ const chat = [
 ]
 
 const birdReportQuestions = [
-    'Lets a make bird report. Describe the birds colors.',
+    'Lets a make bird report\n. Is this a Green Macaw, Scarlet Macaw, or Tucan?',
     'Where did you find this bird?',
     'Did you see any tags or bands on the birds feet?',
     'Is the bird alone or with other birds?'
@@ -56,9 +56,9 @@ function respond(req, res, user){
        user.chatPrompt = REPORT;
        saveAndSend(res, user, `Hello ${input}. ${birdReportQuestions[0]}`);
 
-   } else if (chatPrompt === REPORT) {// color
+   } else if (chatPrompt === REPORT) {// bird type
        user.reports.push(new Report({
-           color: input,
+           bird: input,
            FromCity: req.body.FromCity,
            FromCountry: req.body.FromCountry,
        }));
@@ -70,14 +70,23 @@ function respond(req, res, user){
        user.reports[user.reports.length -1].location = input;
        saveAndSend(res, user, birdReportQuestions[2])
    }
-   else if (chatPrompt === `${REPORT}-1`) {// tag
-       user.chatPrompt = 'START';
+   else if (chatPrompt === `${REPORT}-1`) {//tag
+       user.chatPrompt = `${REPORT}-2`;
        user.reports[user.reports.length -1].tag = input;
+       saveAndSend(res, user, `Thanks ${user.name}! You have just helped save an animal from extinction`)
+   }
+   else if (chatPrompt === `${REPORT}-1`) {// many
+       user.chatPrompt = 'image';
+       user.reports[user.reports.length -1].many = input;
+       saveAndSend(res, user, 'Can you upload a photo?')
+   }
+   else if (chatPrompt === 'image') {// many
+       user.chatPrompt = 'reportDone';
+       user.reports[user.reports.length -1].image = req.body.MediaUrl0 ? req.body.MediaUrl0 : '' ;
        saveAndSend(res, user, `Thanks ${user.name}! You have just helped save an animal from extinction`)
    }
    else {
        sendMessage(res, `Thanks ${user.name}! You have just helped save an animal from extinction`);
-
    }
 }
 
