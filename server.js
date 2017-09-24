@@ -1,8 +1,11 @@
-const accountSid = process.env.TW_API || 'AC05e5e36cdd8805d91483a43ffdba1ca3';
-const authToken = process.env.TW_KEY || 'deaf596b59bdc360252d0782a69b3b94';
+require('dotenv').config();
+
+const accountSid = process.env.TW_API || 'foo';
+const authToken = process.env.TW_KEY || 'foo';
+
 const twilio = require('twilio');
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
-//const client = new twilio(accountSid, authToken);
+const client = new twilio(accountSid, authToken);
 const express = require('express');
 const bodyParser = require('body-parser');
 const serveStatic = require('serve-static');
@@ -15,6 +18,16 @@ var ExifImage = require('exif').ExifImage;
 
 const app = express();
 const port = process.env.PORT || 5000;
+
+// File I/O
+const extName = require('ext-name');
+const path = require('path');
+const urlUtil = require('url');
+const fs = require('fs');
+
+// Image Metadata
+var ExifImage = require('exif').ExifImage;
+
 const db = require(__dirname + '/src/db');
 const User = db.User;
 const Report = db.Report;
@@ -29,66 +42,77 @@ app.use(
 app.use(bodyParser.urlencoded());
 app.use(bodyParser.json());
 
-const report = {
-  birdName: 'macaw',
-  color: 'blue',
-  amountOfBirds: 'one ore more',
-  location: 'flight or grand',
-  tagged: 'yes',
-  marks: 'blue feathers,one eye',
-  nest: true
-};
 var images = [];
+var count = 0;
 
 const errTxt = 'I am a little slow today. please send msg again';
 
 const chat = [
-  'Hello! and welcome to the\n' +
-    'Jr Rangers Program!\n' +
-    'What is your Name?',
-  'Lets a make bird report. Describe the birds colors',
-  'Where did you find this bird?'
+  'Hello! and welcome to the\n' + 'Jr Rangers Program!\n' + 'What is your Name?'
 ];
 
-const chatExistingUser = ['Where did you find this bird?'];
+const birdReportQuestions = [
+  'Lets a make bird report. Is this a Green Macaw, Scarlet Macaw, or Tucan?',
+  'Where did you find this bird?',
+  'Did you see any tags or bands on the birds feet?',
+  'Is the bird alone or with other birds?'
+];
 
 const NAME = 'name';
 const REPORT = 'report';
 
-function updateUser(user, key, value, prompt, cb) {
-  user.chatPrompt = prompt;
-  if (key && value) {
-    user[key] = value;
-  }
+function saveAndSend(res, user, msg) {
   user.save((err, data) => {
-    return cb(err, data);
+    if (err) return sendMessage(res, errTxt);
+    sendMessage(res, msg);
   });
 }
-
 function respond(req, res, user) {
   const chatPrompt = user.chatPrompt;
   const input = req.body.Body;
-
   if (!chatPrompt) {
-    updateUser(user, null, null, NAME, err => {
-      if (err) return sendMessage(res, errTxt);
-      sendMessage(res, chat[0]);
-    });
+    user.chatPrompt = NAME;
+    saveAndSend(res, user, chat[0]);
   } else if (chatPrompt === NAME) {
-    updateUser(user, NAME, input, REPORT, err => {
-      if (err) return sendMessage(res, errTxt);
-      sendMessage(res, `Hello ${input}. ${chat[1]}`);
-    });
+    user.name = input;
+    user.chatPrompt = REPORT;
+    saveAndSend(res, user, `Hello ${input}. ${birdReportQuestions[0]}`);
   } else if (chatPrompt === REPORT) {
-    updateUser(
+    // bird type
+    user.reports.push(
+      new Report({
+        bird: input,
+        FromCity: req.body.FromCity,
+        FromCountry: req.body.FromCountry
+      })
+    );
+    user.chatPrompt = `${REPORT}-0`;
+    saveAndSend(res, user, `${birdReportQuestions[1]}`);
+  } else if (chatPrompt === `${REPORT}-0`) {
+    // location
+    user.chatPrompt = `${REPORT}-1`;
+    user.reports[user.reports.length - 1].location = input;
+    saveAndSend(res, user, birdReportQuestions[2]);
+  } else if (chatPrompt === `${REPORT}-1`) {
+    //tag
+    user.chatPrompt = `${REPORT}-2`;
+    user.reports[user.reports.length - 1].tag = input;
+    saveAndSend(res, user, birdReportQuestions[3]);
+  } else if (chatPrompt === `${REPORT}-2`) {
+    // many
+    user.chatPrompt = 'image';
+    user.reports[user.reports.length - 1].many = input;
+    saveAndSend(res, user, 'Can you upload a photo?');
+  } else if (chatPrompt === 'image') {
+    // many
+    user.chatPrompt = 'reportDone';
+    user.reports[user.reports.length - 1].image = req.body.MediaUrl0
+      ? req.body.MediaUrl0
+      : '';
+    saveAndSend(
+      res,
       user,
-      REPORT,
-      [new Report({ color: input })],
-      `${REPORT}-1`,
-      err => {
-        if (err) return sendMessage(res, errTxt);
-        sendMessage(res, `${chat[2]}`);
-      }
+      `Thanks ${user.name}! You have just helped save an animal from extinction`
     );
   } else {
     sendMessage(
@@ -96,6 +120,78 @@ function respond(req, res, user) {
       `Thanks ${user.name}! You have just helped save an animal from extinction`
     );
   }
+}
+
+/* exif */
+function getRecentImages() {
+  return images;
+}
+
+function clearRecentImages() {
+  images = [];
+}
+
+function fetchRecentImages(req, res) {
+  res.status(200).send(getRecentImages());
+  clearRecentImages();
+}
+
+function deleteMediaItem(mediaItem) {
+  const client = getTwilioClient();
+
+  return client.api
+    .accounts(twilioAccountSid)
+    .messages(mediaItem.MessageSid)
+    .media(mediaItem.mediaSid)
+    .remove();
+}
+
+function getExif(file) {
+  console.log('getExif');
+  try {
+    new ExifImage({ image: file }, function(error, exifData) {
+      if (error) console.log('Error: ' + error.message);
+      else console.log('exifData');
+      console.log(exifData);
+    });
+  } catch (error) {
+    console.log('Error: ' + error.message);
+  }
+}
+
+/* Google Cloud Vision */
+function detectLabels(fileName) {
+  // Imports the Google Cloud client library
+  const Vision = require('@google-cloud/vision');
+
+  // Instantiates a client
+  const vision = Vision({
+    projectId: process.env.GOOGLE_PROJECT_ID,
+    keyFilename: process.env.KEYFILENAME
+  });
+
+  const filename = fileName;
+  // Prepare the request object
+  const request = {
+    source: {
+      imageUri: fileName
+    }
+  };
+
+  // Performs label detection on the image file
+  vision
+    .labelDetection(request)
+    .then(results => {
+      const labels = results[0].labelAnnotations;
+
+      console.log('Labels:');
+      labels.forEach(label =>
+        console.log(label.description + ':\t' + label.score)
+      );
+    })
+    .catch(err => {
+      console.error('ERROR:', err);
+    });
 }
 
 const sendMessage = (response, message) => {
@@ -115,6 +211,37 @@ app.post('/message', (req, res) => {
   console.log(JSON.stringify(req.body));
   console.log('*******');
 
+  // Extract Media (image, video, etc.)
+  const { body } = req;
+  const { NumMedia, From: SenderNumber, MessageSid } = body;
+  let saveOperations = [];
+  const mediaItems = [];
+
+  for (var i = 0; i < NumMedia; i++) {
+    // eslint-disable-line
+    const mediaUrl = body[`MediaUrl${i}`];
+    const contentType = body[`MediaContentType${i}`];
+    const extension = extName.mime(contentType)[0].ext;
+    const mediaSid = path.basename(urlUtil.parse(mediaUrl).pathname);
+    const filename = `${mediaSid}.${extension}`;
+
+    mediaItems.push({ mediaSid, MessageSid, mediaUrl, filename });
+    //saveOperations = mediaItems.map(mediaItem => SaveMedia(mediaItem));
+
+    //getExif(mediaUrl);
+    detectLabels(mediaUrl);
+
+    var name = count + '.txt';
+    fs.writeFile(name, mediaUrl, function(err) {
+      if (err) {
+        return console.log(err);
+      }
+
+      console.log('The file was saved!');
+    });
+    count++;
+  }
+
   User.findOne(
     {
       phone: phone
@@ -124,10 +251,12 @@ app.post('/message', (req, res) => {
         return res.send('not ok :(');
       }
       if (!user) {
-        let u = new User({ phone: phone });
+        let u = new User({
+          phone: phone,
+          FromCity: req.body.FromCity,
+          FromCountry: req.body.FromCountry
+        });
         u.save((err, userRecord) => {
-          console.log(err, 'ERROR');
-          console.log(userRecord, 'RECORD');
           if (err) return sendMessage(res, errTxt);
           return respond(req, res, u);
         });
@@ -136,18 +265,6 @@ app.post('/message', (req, res) => {
       }
     }
   );
-});
-
-app.get('/results', (req, res) => {
-  User.find({}).exec(function(err, result) {
-    console.log(err, result);
-    if (result) {
-      res.status(200);
-    } else {
-      res.status(400);
-    }
-    res.send(result);
-  });
 });
 
 app.get('/health', (req, res) => {

@@ -24,6 +24,12 @@ var reportSchema = new mongoose.Schema({
     // phone number of participant
     bird: String,
     color: String,
+    location:String,
+    tag: String,
+    many:String,
+    image: String,
+    FromCity: String,
+    FromCountry: String,
 });
 
 var userSchema = new mongoose.Schema({
@@ -31,12 +37,11 @@ var userSchema = new mongoose.Schema({
     phone: {unique: true, type: String},
     age: { type: Number, min: 0},
     chatPrompt: String,
-    reports: [reportSchema]
-});
+    reports: [reportSchema],
+    FromCity: String,
+    FromCountry: String,
 
-// userSchema.updateLastChat = (lastQues, cb)=>{
-//
-// }
+});
 
 
 var User = mongoose.model('Users', userSchema);
@@ -49,32 +54,6 @@ User.remove({}, function(err) {
     }
 });
 
-// Creating one user.
-var johndoe = new User ({
-    name: 'John',
-    age: 25,
-    phone:'76088899999',
-    reports: [],
-
-});
-
-function up (user, x){
-    user.age = 11
-    user.save(err =>{
-        console.log(err);
-    })
-}
-johndoe.save(err =>{
-    console.log(err, 'SAVING')
-    User.findOne({
-        phone: `76088899999`,
-    }, function(err, user) {
-        console.log('USER', user);
-        up(user)
-
-
-    });
-})
 
 module.exports = {
     User,
