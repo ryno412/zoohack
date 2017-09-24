@@ -5,20 +5,20 @@ const Home = props => {
   if (props.loading) {
     return <CircularProgress />;
   }
-  let data = [
-    {
-      name: 'John',
-      phone: '232-324-1432',
-      age: 11
-    },
-    {
-      name: 'John',
-      phone: '232-324-1432',
-      age: 11
-    }
-  ];
+  // let data = [
+  //   {
+  //     name: 'John',
+  //     phone: '232-324-1432',
+  //     age: 11
+  //   },
+  //   {
+  //     name: 'John',
+  //     phone: '232-324-1432',
+  //     age: 11
+  //   }
+  // ];
 
-  let mapped = data.map((item, i) => {
+  let mapped = props.data.map((item, i) => {
     return (
       <div key={i} className="item">
         <div>Name: {item.name}</div>
