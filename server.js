@@ -53,13 +53,11 @@ const NAME = 'name';
 const REPORT = 'report';
 
 function updateUser (user, key, value, prompt, cb){
-    console.log(user, 'USER IN UPDATE');
     user.chatPrompt = prompt;
     if (key && value){
         user[key] = value;
     }
     user.save((err, data) =>{
-        console.log('ERR SAVING USER', err, data);
         return cb(err, data)
     });
 }
@@ -118,7 +116,6 @@ app.post('/message', (req, res)=>{
     User.findOne({
         phone: phone,
     }, function(err, user) {
-        console.log('USER', user);
         if (err){
             return res.send('not ok :(')
         }
